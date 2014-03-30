@@ -40,18 +40,20 @@
     /* JavaScript preload */
 
     var img_url = new Array();
+    img_url.push("/static/img/github-letterpress-on.png");
     img_url.push("/static/img/linkedin-letterpress-on.png");
     img_url.push("/static/img/viadeo-letterpress-on.png");
     {% for quicklink in FOOTER_QUICKLINKS %}
-      img_url.push("{{ quicklink.3|escapejs }}");
+      img_url.push("{{ quicklink.2|escapejs }}");
     {% endfor %}
 
     {% block js-preload %}{% endblock %}
-    
+
+    var img_loader = new Array();
     function preloader() {
-      var img_loader = new Image();
       for (var i=0 ; i!=img_url.length ; i++) {
-        img_loader.src = img_url[i];
+        img_loader.push(new Image());
+        img_loader[i].src = img_url[i];
       }
     }
   -->
