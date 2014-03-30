@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block page_title %}{{ project.name }} - PortFolio{% endblock %}
+{% block title %}Project: {{ project.name }}{% endblock %}
+{% block page_description %}{{ project.short_description }}{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url projects.views.home %}">Home</a></li>
+  <li><a href="#">{{ project.year }}</a></li>
+  <li class="active">{{ project.name }}</li>
+{% endblock %}
+
+{% block content %}
+  <p class="short-description">{{ project.short_description }}</p>
+  <p class="category">{{ project.category.name }}</p>
+  <ul class="technology">
+    {% for techno in project.technologies.all %}
+      <li>{{ techno.name }}</li>
+    {% endfor %}
+  </ul>
+  
+  {% for subdescription in project.subdescription_set.all %}
+    {% if subdescription.description %}
+      {% if subdescription.html_description %}
+        {{ subdescription.description|safe }}
+      {% else %}
+        <p>{{ subdescription.description }}</p>
+      {% endif %}
+    {% endif %}
+    {% if subdescription.image %}
+      <p class="image">
+        <img src="/media/{{ subdescription.image }}" alt="{{ subdescription.legend }}" />
+        <br/><span class="legend">{{ subdescription.legend }}</span>
+      </p>
+    {% endif %}
+  {% endfor %}
+  
+  {% if project.download_set.all|length > 0 %}
+    <ul class="downloads" data-anchor="Download">
+    {% for down in project.download_set.all %}
+      <li><a href="/media/{{ down.down }}" target="blank_">{{ down.down }}</a></li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}
+

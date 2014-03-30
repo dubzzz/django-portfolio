@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  
+  <title>{% block page_title %}{% endblock %}</title>
+  <meta name="description" content="{% block page_description %}{% endblock %}" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" />
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+	
+	<!-- Custom font from Google Fonts services -->
+	<link href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do' rel='stylesheet' type='text/css' />
+	
+	<!-- Homemade CSS -->
+	<link href='/static/css/main.css' rel='stylesheet' type='text/css' />
+
+  <!-- Google Analytics -->
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-49278649-1']);
+    _gaq.push(['_setDomainName', 'dubien.me']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript">
+  <!--
+    /* JavaScript preload */
+
+    var img_url = new Array();
+    img_url.push("/static/img/linkedin-letterpress-on.png");
+    img_url.push("/static/img/viadeo-letterpress-on.png");
+    img_url.push("/static/img/qrcode-nicolas-letterpress-on.png");
+    img_url.push("/static/img/qrcode-pf-letterpress-on.png");
+
+    {% block js-preload %}{% endblock %}
+    
+    function preloader() {
+      var img_loader = new Image();
+      for (var i=0 ; i!=img_url.length ; i++) {
+        img_loader.src = img_url[i];
+      }
+    }
+  -->
+  </script>
+</head>
+<body onLoad="javascript:preloader();">
+<div class="container">
+	<div class="header">
+		<h1>{% block title %}{% endblock %}</h1>
+		<p>by <a href="http://nicolas.dubien.me/" target="_blank">Nicolas DUBIEN</a></p>
+
+    <!--
+    <div id="social-network-header">
+      <a href="http://www.linkedin.com/pub/nicolas-dubien/42/a93/623" target="blank_" id="linkedin"><img src="/static/img/linkedin.png" alt="LinkedIn" /></a>
+      <a href="http://fr.viadeo.com/fr/profile/nicolas.dubien3" target="blank_" id="viadeo"><img src="/static/img/viadeo.png" alt="Viadeo" /></a>
+    </div>
+    -->
+    <a href="http://www.linkedin.com/pub/nicolas-dubien/42/a93/623" target="blank_" id="linkedin" class="social-network-letterpress"></a>
+    <a href="http://fr.viadeo.com/fr/profile/nicolas.dubien3" target="blank_" id="viadeo" class="social-network-letterpress"></a>
+		<ol class="breadcrumb">{% block breadcrumb %}{% endblock %}</ol>
+	</div>
+  <div class="header-shadow"></div>
+  <!--
+  <div id="social-network">
+    <a href="http://www.linkedin.com/pub/nicolas-dubien/42/a93/623" target="blank_" id="linkedin"><img src="/static/img/linkedin.png" alt="LinkedIn" /></a>
+    <a href="http://fr.viadeo.com/fr/profile/nicolas.dubien3" target="blank_" id="viadeo"><img src="/static/img/viadeo.png" alt="Viadeo" /></a>
+  </div>
+  -->
+	
+  <div class="content">{% block content %}{% endblock %}</div>
+  <ul class="menu-items-right"></ul>
+  
+  <div class="footer-shadow"></div>
+  <div class="footer">
+    Since 2014
+    <p class="qrcodes">
+       <a href="http://nicolas.dubien.me/" target="blank_"><img src="/static/img/qrcode-nicolas-letterpress-off.png" onmouseover="this.src='/static/img/qrcode-nicolas-letterpress-on.png';" onmouseout="this.src='/static/img/qrcode-nicolas-letterpress-off.png';" alt="QR code nicolas.dubien.me" /></a>
+       <a href="http://portfolio.dubien.me/" target="blank_"><img src="/static/img/qrcode-pf-letterpress-off.png" onmouseover="this.src='/static/img/qrcode-pf-letterpress-on.png';" onmouseout="this.src='/static/img/qrcode-pf-letterpress-off.png';" alt="QR code portfolio.dubien.me" /></a>
+    </p>
+  </div>
+</div>
+<script type="text/javascript">
+<!--
+  function scrollToAnchor(aid){
+    var aTag = $(aid);
+    $('html,body').animate({scrollTop: aTag.offset().top},'slow');
+  }
+
+  /* MENU: ANIMATION */
+  
+  var content = $(".content").first()[0];
+  var menu_items = $(".menu-items-right").first()[0];
+  var OFFSET_LEFT_MENU_ITEMS = 10;
+  var OFFSET_TOP_MENU_ITEMS = 10;
+  var isSoftMoveRequired = ! (navigator.userAgent.search("Firefox") > -1);
+  function align_menu_items(soft_move) {
+    menu_items.style.left = (content.offsetLeft + content.clientWidth - menu_items.clientWidth + OFFSET_LEFT_MENU_ITEMS) + "px";
+    if (isSoftMoveRequired && soft_move) {
+      $(menu_items).stop();
+
+      if ($(window).scrollTop() <= content.offsetTop)
+        $(menu_items).animate({opacity: .4, top: (content.offsetTop + OFFSET_TOP_MENU_ITEMS) + "px"}, 250);
+      else
+        $(menu_items).animate({opacity: .4, top: ($(window).scrollTop() + OFFSET_TOP_MENU_ITEMS) + "px"}, 250);
+    } else { // due to discontinuous display on Chrome / 'else' works perfectly with Firefox
+      if ($(window).scrollTop() <= content.offsetTop)
+        menu_items.style.top = (content.offsetTop + OFFSET_TOP_MENU_ITEMS) + "px";
+      else
+        menu_items.style.top = ($(window).scrollTop() + OFFSET_TOP_MENU_ITEMS) + "px";
+    }
+  }
+  
+  /* MENU: CREATION */
+  
+  var id = 0;
+  $(".content [data-anchor]").each(function() {
+      if (! this.getAttribute("id")) {
+        this.setAttribute("id", "auto-generated-id-" + (id++));
+      }
+      if ($(this).hasClass("video")) {
+        $(menu_items).append("<li onclick=\"scrollToAnchor('#" + this.getAttribute("id") + "');\"><img src=\"/static/img/video.png\" /> " + this.getAttribute("data-anchor") + "</li>");
+      } else if ($(this).hasClass("image")) {
+        $(menu_items).append("<li onclick=\"scrollToAnchor('#" + this.getAttribute("id") + "');\"><img src=\"/static/img/image.png\" /> " + this.getAttribute("data-anchor") + "</li>");
+      } else {
+        $(menu_items).append("<li onclick=\"scrollToAnchor('#" + this.getAttribute("id") + "');\">" + this.getAttribute("data-anchor") + "</li>");
+      }
+  });
+  
+  /* MENU: OPACITY */
+  
+  $(".menu-items-right li").hover(function() {
+    $(menu_items).stop();
+    $(menu_items).fadeTo(250, 1.);
+  },
+  function() {
+    $(menu_items).stop();
+    $(menu_items).fadeTo(1000, .4);
+  });
+
+  /* MENU: INITIALISATION & TRIGGERS */
+  
+  $(menu_items).fadeTo(3000, .4);
+  align_menu_items(false);
+
+  $(window).scroll(function() {align_menu_items(true);});
+  $(window).resize(function() {align_menu_items(false);});
+-->
+</script>
+</body>
+</html>
