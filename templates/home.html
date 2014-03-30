@@ -9,42 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  <h2 data-anchor="Why?">What is the aim of this portfolio?</h2>
-  <p>
-    Every career portfolios' aim is first of all to describe some kind of career path or personal developments through projects.
-    This portfolio is dedicated to people who want to have more details on projects I worked on in the past few years.
-  </p>
-  <div class="more-content">
-    <p>
-      It only shows a subset of projects I worked on until now.
-      Most of them were personal: developed for fun or to ease my everyday life - <i>it is really a waste of time to do several times the same thing when a simple script can do it for you at least as quickly</i>.
-      Others were done during school projects or are related to school materials.
-      
-      Even if I try to be as comprehensive as possible concerning this projects' sample I think that the best way to learn more about them is to ask for details.
-      This portfolio try to give an insight concerning the project itself.
-      Some of these projects can be tested throught executables.
-    </p>
-    <p>
-      Keeping an eye on what I have done so far is definitely one of the main justification of this website.
-    </p>
-  </div>
-  <p class="more-switch"><a href="javascript:void(0);">see more..</a></p>
-  <script type="text/javascript">
-  <!--
-    $('.more-switch a').click(function() {
-      if($('.more-content').is(':visible')) {
-        $('.more-switch a').text("see more..");
-        $('.more-content').slideUp(500);
-      } else {
-        $('.more-switch a').text("hide..");
-        $('.more-content').slideDown(500);
-      }
-    });
-    $('.more-content').hide();
-  -->
-  </script>
-  <p style="text-align:center;"><img src="/static/img/construct.png" alt="on construction" style="width:50px;height:50px;" /></p>
-  <p style="text-align:center;"><b>ON CONSTRUCTION</b></p>
+  {% include "home_content.html" %}
 
   {% regroup projects by year as by_year_list %}
 

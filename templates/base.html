@@ -42,8 +42,9 @@
     var img_url = new Array();
     img_url.push("/static/img/linkedin-letterpress-on.png");
     img_url.push("/static/img/viadeo-letterpress-on.png");
-    img_url.push("/static/img/qrcode-nicolas-letterpress-on.png");
-    img_url.push("/static/img/qrcode-pf-letterpress-on.png");
+    {% for quicklink in FOOTER_QUICKLINKS %}
+      img_url.push("{{ quicklink.3|escapejs }}");
+    {% endfor %}
 
     {% block js-preload %}{% endblock %}
     
@@ -60,35 +61,25 @@
 <div class="container">
 	<div class="header">
 		<h1>{% block title %}{% endblock %}</h1>
-		<p>by <a href="http://nicolas.dubien.me/" target="_blank">Nicolas DUBIEN</a></p>
-
-    <!--
-    <div id="social-network-header">
-      <a href="http://www.linkedin.com/pub/nicolas-dubien/42/a93/623" target="blank_" id="linkedin"><img src="/static/img/linkedin.png" alt="LinkedIn" /></a>
-      <a href="http://fr.viadeo.com/fr/profile/nicolas.dubien3" target="blank_" id="viadeo"><img src="/static/img/viadeo.png" alt="Viadeo" /></a>
-    </div>
-    -->
-    <a href="http://www.linkedin.com/pub/nicolas-dubien/42/a93/623" target="blank_" id="linkedin" class="social-network-letterpress"></a>
-    <a href="http://fr.viadeo.com/fr/profile/nicolas.dubien3" target="blank_" id="viadeo" class="social-network-letterpress"></a>
+    <p>by <a href="{{ HEADER_ADMIN.1 }}" target="_blank">{{ HEADER_ADMIN.0 }}</a></p>
+    
+    {% for quicklink in HEADER_QUICKLINKS %}
+      <a href="{{ quicklink.1 }}" target="blank_" id="{{ quicklink.0 }}" class="social-network-letterpress"></a>
+    {% endfor %}
 		<ol class="breadcrumb">{% block breadcrumb %}{% endblock %}</ol>
 	</div>
   <div class="header-shadow"></div>
-  <!--
-  <div id="social-network">
-    <a href="http://www.linkedin.com/pub/nicolas-dubien/42/a93/623" target="blank_" id="linkedin"><img src="/static/img/linkedin.png" alt="LinkedIn" /></a>
-    <a href="http://fr.viadeo.com/fr/profile/nicolas.dubien3" target="blank_" id="viadeo"><img src="/static/img/viadeo.png" alt="Viadeo" /></a>
-  </div>
-  -->
 	
   <div class="content">{% block content %}{% endblock %}</div>
   <ul class="menu-items-right"></ul>
   
   <div class="footer-shadow"></div>
   <div class="footer">
-    Since 2014
+    {{ FOOTER_TEXT }}
     <p class="qrcodes">
-       <a href="http://nicolas.dubien.me/" target="blank_"><img src="/static/img/qrcode-nicolas-letterpress-off.png" onmouseover="this.src='/static/img/qrcode-nicolas-letterpress-on.png';" onmouseout="this.src='/static/img/qrcode-nicolas-letterpress-off.png';" alt="QR code nicolas.dubien.me" /></a>
-       <a href="http://portfolio.dubien.me/" target="blank_"><img src="/static/img/qrcode-pf-letterpress-off.png" onmouseover="this.src='/static/img/qrcode-pf-letterpress-on.png';" onmouseout="this.src='/static/img/qrcode-pf-letterpress-off.png';" alt="QR code portfolio.dubien.me" /></a>
+      {% for quicklink in FOOTER_QUICKLINKS %}
+        <a href="{{ quicklink.1 }}" target="blank_"><img src="{{ quicklink.3 }}" onmouseover="this.src='{{ quicklink.2|escapejs }}';" onmouseout="this.src='{{ quicklink.3|escapejs }}';" alt="{{ quicklink.0 }}" /></a>
+      {% endfor %}
     </p>
   </div>
 </div>

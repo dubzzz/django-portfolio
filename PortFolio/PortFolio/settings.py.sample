@@ -1,13 +1,30 @@
 # -*- coding: utf-8 -*-
 # Django settings for PortFolio project.
+import django.conf.global_settings as DEFAULT_SETTINGS
 
-BASE_PATH = "*****" #TODO
+# CUSTOM SETTINGS
+# TODO
 
-DEBUG = True #TODO
+BASE_PATH = ''
+
+HEADER_ADMIN = ('Your Name', 'http://mysite.com')
+HEADER_QUICKLINKS = (
+#    ('linkedin', 'http://www.linkedin.com/pub/*****'),
+#    ('viadeo', 'http://fr.viadeo.com/fr/profile/*****'),
+)
+
+FOOTER_TEXT = ''
+FOOTER_QUICKLINKS = (
+#     ('alt text', 'url', 'mouseover image', 'mouseout image'),
+)
+
+# DEFAULT SETTINGS
+
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Nicolas DUBIEN', 'github@dubien.org'),
+#    ('Your Name', 'me@mydomain.com'),
 )
 
 MANAGERS = ADMINS
@@ -86,7 +103,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '3e*wo+tw9(1m!kgyp2aj(w(e=_t6z3@&amp;tjpt-6)7u$r*6v(429'
+SECRET_KEY = '' #TODO generate a new one
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
