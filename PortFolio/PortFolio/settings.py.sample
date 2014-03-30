@@ -9,6 +9,7 @@ BASE_PATH = ''
 
 HEADER_ADMIN = ('Your Name', 'http://mysite.com')
 HEADER_QUICKLINKS = (
+#    ('github', 'https://github.com/*****'),
 #    ('linkedin', 'http://www.linkedin.com/pub/*****'),
 #    ('viadeo', 'http://fr.viadeo.com/fr/profile/*****'),
 )

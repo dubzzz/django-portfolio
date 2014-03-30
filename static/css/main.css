@@ -57,6 +57,18 @@ body
 	background-repeat: no-repeat;
 }
 
+.header .social-network-letterpress#github
+{
+	background-image: url('../img/github-letterpress-off.png');
+	background-repeat: no-repeat;
+}
+
+.header .social-network-letterpress#github:hover
+{
+	background-image: url('../img/github-letterpress-on.png');
+	background-repeat: no-repeat;
+}
+
 .header-shadow
 {
 	position: relative;
