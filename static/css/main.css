@@ -283,7 +283,7 @@ a:active
 	text-decoration: none;
 } /* selected link */
 
-.content > p:first-letter
+.content > p:first-letter, .more-content > p:first-letter
 {
 	padding-left: 1em;
 }
