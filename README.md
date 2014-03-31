@@ -28,7 +28,8 @@ Or get the [zipball from GitHub repository](https://github.com/dubzzz/django-por
 
 For tests, you just have to run the command:
 ```bash
-python manage.py runserver 0.0.0.0:8000
+python manage.py syncdb # Generate the database
+python manage.py runserver 0.0.0.0:8000 # Run the development server
 ```
 
 For more details concerning how to run this project using an Apache server please have a look to [Django Framework official documentation](https://www.djangoproject.com/download/).

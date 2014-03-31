@@ -41,6 +41,8 @@ class SubDescription(models.Model):
     image = models.ImageField(upload_to=upload_path, blank=True, null=True, help_text="Image")
     legend = models.CharField(max_length=150, blank=True, null=True, help_text="Légende de l'image")
 
+    data_anchor = models.CharField(max_length=50, blank=True, null=True, help_text="Data-anchor pour le paragraphe ou l'image (pour non code-HTML)")
+
 class Download(models.Model):
     def upload_path(self, filename):
         if self.project:
