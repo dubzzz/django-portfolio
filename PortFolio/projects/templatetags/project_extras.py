@@ -37,6 +37,14 @@ def escape_project(text):
         + element 2
     OUTPUT:
         <p>This is a list:</p><ul><li>element 1</li><li>element 2</li></ul>
+    
+    Italic/Bold
+    -----------
+
+    INPUT:
+        This text is *italic* and this one **bold**.
+    OUTPUT:
+        <p>This text is <i>italic</i> and this one <b>bold</b>.</p>
     """
     
     escaped_text = escape(text)
@@ -60,5 +68,9 @@ def escape_project(text):
     else:
         escaped_text = "<p>%s" % escaped_text
     
+    # Italic/Bold
+    escaped_text = re.sub(r'\*\*(?P<text>[^(\*\<\n)]+)\*\*', '<b>\g<text></b>', escaped_text)
+    escaped_text = re.sub(r'\*(?P<text>[^(\*\<\n)]+)\*', '<i>\g<text></i>', escaped_text)
+
     return mark_safe(escaped_text)
 
