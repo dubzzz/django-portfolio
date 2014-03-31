@@ -9,7 +9,7 @@ import re
 register = template.Library()
 
 @register.filter(is_safe=True)
-def escape_project(text):
+def escape_project(text, data_anchor=None):
     """
     This templatetag converts every url in text to an hyperlink.
     The text is escaped for HTML before adding hyperlinks.
@@ -69,8 +69,14 @@ def escape_project(text):
         escaped_text = "<p>%s" % escaped_text
     
     # Italic/Bold
+    
     escaped_text = re.sub(r'\*\*(?P<text>[^(\*\<\n)]+)\*\*', '<b>\g<text></b>', escaped_text)
     escaped_text = re.sub(r'\*(?P<text>[^(\*\<\n)]+)\*', '<i>\g<text></i>', escaped_text)
+    
+    # Add data-anchor to paragraphs
+    
+    if data_anchor and len(data_anchor) > 0:
+        escaped_text = re.sub(r'^<(?P<details>[^>]+)>', '<\g<details> data-anchor="%s">' % data_anchor, escaped_text)
 
     return mark_safe(escaped_text)
 
