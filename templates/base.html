@@ -66,7 +66,7 @@
     <p>by <a href="{{ HEADER_ADMIN.1 }}" target="_blank">{{ HEADER_ADMIN.0 }}</a></p>
     
     {% for quicklink in HEADER_QUICKLINKS %}
-      <a href="{{ quicklink.1 }}" target="blank_" id="{{ quicklink.0 }}" class="social-network-letterpress"></a>
+    <a href="{{ quicklink.1 }}" target="blank_" id="{{ quicklink.0 }}" class="social-network-letterpress" title="{{ quicklink.0|capfirst }}"></a>
     {% endfor %}
 		<ol class="breadcrumb">{% block breadcrumb %}{% endblock %}</ol>
 	</div>
@@ -80,7 +80,7 @@
     {{ FOOTER_TEXT }}
     <p class="qrcodes">
       {% for quicklink in FOOTER_QUICKLINKS %}
-        <a href="{{ quicklink.1 }}" target="blank_"><img src="{{ quicklink.3 }}" onmouseover="this.src='{{ quicklink.2|escapejs }}';" onmouseout="this.src='{{ quicklink.3|escapejs }}';" alt="{{ quicklink.0 }}" /></a>
+      <a href="{{ quicklink.1 }}" target="blank_" title="{{ quicklink.0 }}"><img src="{{ quicklink.3 }}" onmouseover="this.src='{{ quicklink.2|escapejs }}';" onmouseout="this.src='{{ quicklink.3|escapejs }}';" alt="{{ quicklink.0 }}" /></a>
       {% endfor %}
     </p>
   </div>
