@@ -19,6 +19,8 @@ FOOTER_QUICKLINKS = (
 #     ('alt text', 'url', 'mouseover image', 'mouseout image'),
 )
 
+THEME = 'school' # also: 'leather'
+
 # DEFAULT SETTINGS
 
 DEBUG = True

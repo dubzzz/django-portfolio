@@ -5,11 +5,11 @@ body
 
 .header
 {
-	background-image: url('../img/anneau_bloc.png') /*height: 50px*/, url('../img/bloc.png');
-	background-position: top left, left 0px top 50px;
-	background-repeat: repeat-x, repeat-x; /* WARNING: repeat-x for 2nd background-image */
+	background-image: url('../img/leather.png');
+	background-position: top left;
+	background-repeat: repeat;
 	
-	padding-top: 50px;
+	padding-top: 20px;
 	padding-left: 20px;
 	padding-right: 20px;
 	padding-bottom: 10px;
@@ -29,8 +29,6 @@ body
 
 	margin-right: 5px;
 	top: -57px;
-
-	opacity: 0.5;
 }
 
 .header .social-network-letterpress#linkedin
@@ -100,17 +98,17 @@ body
 	position: relative;
 	z-index: 100;
 
-	background-image: url('../img/bloc.png');
+	background-image: url('../img/leather.png');
 	background-repeat: repeat;
 
 	padding-bottom: 20px;
 
 	text-align: center;
 	font-size: 1.1em;
-	/*color: #333333;*/
-	color: #bd7638;
+	
+	color: #ddae80;
 	font-weight: bold;
-	text-shadow: 0px 2px 3px #ffbf87;
+	text-shadow: 0px 2px 3px #bd7638;
 	font-family: 'Nothing You Could Do', cursive;
 }
 
@@ -122,7 +120,6 @@ body
 .footer .qrcodes img
 {
 	width: 64px;
-	opacity: 0.5;
 }
 
 .menu-items-right
@@ -230,103 +227,10 @@ body
 	}
 }
 
-/*.header #social-network-header
-{
-	position: relative;
-	width: 100%;
-	
-	text-align: right;
-	
-	height: 0px;
-}
-
-.header #social-network-header a
-{
-	display: inline-block;
-	position: relative;
-	margin-right: 15px;
-	z-index: 110;
-
-	top: -17px;
-	animation: animate-social-network-header-off 0.2s;
-	animation-fill-mode: both;
-	-webkit-animation: animate-social-network-header-off 0.2s;
-	-webkit-animation-fill-mode: both;
-}
-
-@keyframes animate-social-network-header-off
-{
-	from
-	{
-		top: -48px;
-	}
-	to
-	{
-		top: -17px;
-	}
-}
-
-@-webkit-keyframes animate-social-network-header-off
-{
-	from
-	{
-		top: -48px;
-	}
-	to
-	{
-		top: -17px;
-	}
-}
-
-.header #social-network-header a:hover
-{
-	top: -48px;
-	height: 53px;
-	animation: animate-social-network-header-on 0.3s;
-	animation-fill-mode: both;
-	-webkit-animation: animate-social-network-header-on 0.3s;
-	-webkit-animation-fill-mode: both;
-}
-
-@keyframes animate-social-network-header-on
-{
-	from
-	{
-		top: -17px;
-	}
-	75%
-	{
-		top: -53px;
-	}
-	to
-	{
-		top: -48px;
-	}
-}
-
-@-webkit-keyframes animate-social-network-header-on
-{
-	from
-	{
-		top: -17px;
-	}
-	75%
-	{
-		top: -53px;
-	}
-	to
-	{
-		top: -48px;
-	}
-}*/
-
 .header .breadcrumb
 {
-	/*position: relative;
-	z-index: 120;*/
-
 	box-shadow: 0px 2px 3px #FFBF87;
-	background: url('../img/bloc-light.png') repeat;
+	background: url('../img/leather-light.png') repeat;
 	
 	color: #bd7638;
 }
@@ -340,96 +244,6 @@ body
 {
 	color: #58371a;
 }
-
-/*#social-network
-{
-	position: relative;
-	z-index: 11;
-	
-	text-align: right;
-	right: 20px;
-
-	margin-top: -35px;
-	height: 35px;
-}
-
-#social-network a
-{
-	display: inline-block;
-	float: right;
-	margin-left: 15px;
-	
-	padding-top: 0px;
-	animation: animate-social-network-off 0.2s;
-	animation-fill-mode: both;
-	-webkit-animation: animate-social-network-off 0.2s;
-	-webkit-animation-fill-mode: both;
-}
-
-@keyframes animate-social-network-off
-{
-	from
-	{
-		padding-top: 25px;
-	}
-	to
-	{
-		padding-top: 0px;
-	}
-}
-
-@-webkit-keyframes animate-social-network-off
-{
-	from
-	{
-		padding-top: 25px;
-	}
-	to
-	{
-		padding-top: 0px;
-	}
-}
-
-#social-network a:hover
-{
-	padding-top: 30px;
-	animation: animate-social-network-on 0.4s;
-	animation-fill-mode: both;
-	-webkit-animation: animate-social-network-on 0.4s;
-	-webkit-animation-fill-mode: both;
-}
-
-@-webkit-keyframes animate-social-network-on
-{
-	from
-	{
-		padding-top: 0px;
-	}
-	75%
-	{
-		padding-top: 40px;
-	}
-	to
-	{
-		padding-top: 25px;
-	}
-}
-
-@keyframes animate-social-network-on
-{
-	from
-	{
-		padding-top: 0px;
-	}
-	75%
-	{
-		padding-top: 40px;
-	}
-	to
-	{
-		padding-top: 25px;
-	}
-}*/
 
 .content
 {
@@ -446,6 +260,7 @@ body
 	font-weight: bold;
 	margin-bottom: 0px;
 	
+	color: #000000;
 	font-family: 'Nothing You Could Do', cursive;
 }
 
@@ -456,14 +271,14 @@ body
 	
 	font-family: 'Nothing You Could Do', cursive;
 	
-	color: #bd7638;
-	text-shadow: 0px 2px 3px #ffbf87;
+	color: #ddae80;
+	text-shadow: 0px 2px 3px #bd7638;
 }
 
 .header p a
 {
-	color: #bd7638;
-	text-shadow: 0px 2px 3px #ffbf87;
+	color: #510;
+	text-shadow: 0px 2px 3px #bd7638;
 }
 
 .header p a:hover
@@ -483,9 +298,8 @@ body
 
 .content
 {
-	background: url('../img/feuille.png') repeat;
+	background: url('../img/paper.png') repeat;
 	position: relative;
-	/*padding-right: 100px;*/
 }
 
 .content h2
@@ -520,7 +334,7 @@ body
 
 .content .details
 {
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 	text-align: justify;
 }
 
@@ -582,7 +396,6 @@ body
 	height: 210px;
 	
 	padding: 40px 5px 5px 5px;
-	overflow: hidden;
 	margin-bottom: 20px;
 	text-align: left;
 	cursor: pointer;
@@ -590,11 +403,18 @@ body
 	-webkit-backface-visibity: hidden; /* anti-aliasing effect for Chrome (+translate3d) */
 }
 
-.content .details:nth-of-type(n) .postit-wrapper:nth-of-type(n) .postit:hover
+.content .details .postit:after
 {
-	-ms-transform: scale(1.05);
-	-webkit-transform: scale(1.05);
-	transform: scale(1.05);
+	content: '';
+	position: absolute;
+
+	background-image: url('../img/cachet-cire.png');
+	background-repeat: no-repeat;
+	width: 57px;
+	height: 58px;
+
+	top: -22px;
+	left: 75px;
 }
 
 .content .details:nth-of-type(4n) .postit-wrapper:nth-of-type(4n) .postit,

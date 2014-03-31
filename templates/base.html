@@ -19,7 +19,7 @@
 	<link href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do' rel='stylesheet' type='text/css' />
 	
 	<!-- Homemade CSS -->
-	<link href='/static/css/main.css' rel='stylesheet' type='text/css' />
+  <link href='/static/themes/{{ THEME }}/css/main.css' rel='stylesheet' type='text/css' />
 
   <!-- Google Analytics -->
   <script type="text/javascript">
@@ -40,9 +40,9 @@
     /* JavaScript preload */
 
     var img_url = new Array();
-    img_url.push("/static/img/github-letterpress-on.png");
-    img_url.push("/static/img/linkedin-letterpress-on.png");
-    img_url.push("/static/img/viadeo-letterpress-on.png");
+    img_url.push("/static/themes/{{ THEME }}/img/github-letterpress-on.png");
+    img_url.push("/static/themes/{{ THEME }}/img/linkedin-letterpress-on.png");
+    img_url.push("/static/themes/{{ THEME }}/img/viadeo-letterpress-on.png");
     {% for quicklink in FOOTER_QUICKLINKS %}
       img_url.push("{{ quicklink.2|escapejs }}");
     {% endfor %}

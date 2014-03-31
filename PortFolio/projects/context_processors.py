@@ -7,5 +7,6 @@ def my_context_processor(request):
             "HEADER_QUICKLINKS": settings.HEADER_QUICKLINKS,
             "FOOTER_TEXT": settings.FOOTER_TEXT,
             "FOOTER_QUICKLINKS": settings.FOOTER_QUICKLINKS,
+            "THEME": settings.THEME,
            }
 
