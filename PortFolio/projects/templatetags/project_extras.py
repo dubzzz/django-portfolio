@@ -16,17 +16,25 @@ def escape_project(text):
 
     URL to link
     -----------
-    INPUT:
+    
+    INPUT: need to start with a space or new line..
         Please visit: http://portfolio.dubien.me/
     OUTPUT:
         <p>Please visit: <a href="http://portfolio.dubien.me/" target="blank_">http://portfolio.dubien.me/</a></p>
+    
+    INPUT:
+        [Click here](http://portfolio.dubien.me/) to try it!
+    OUTPUT:
+        <p><a href="http://portfolio.dubien.me/" target="blank_">Click here</a> to try it!</p>
+
 
     Bulletpoints to list
     --------------------
+    
     INPUT:
         This is a list:
-        * element 1
-        * element 2
+        + element 1
+        + element 2
     OUTPUT:
         <p>This is a list:</p><ul><li>element 1</li><li>element 2</li></ul>
     """
@@ -35,11 +43,12 @@ def escape_project(text):
 
     # URL to link
 
-    escaped_text = re.sub(r'(?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)', '<a href="\g<url>" target="blank_">\g<url></a>', escaped_text)
+    escaped_text = re.sub(r'(?P<begin>^|\n|\s)(?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)', '\g<begin><a href="\g<url>" target="blank_">\g<url></a>', escaped_text)
+    escaped_text = re.sub(r'\[(?P<title>[^\]]+)\]\((?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)\)', '<a href="\g<url>" target="blank_">\g<title></a>', escaped_text)
     
     # Bulletpoints to list
     
-    escaped_text = re.sub(r'\n\*\s(?P<li_element>[^\n]+)', '</p><ul><li>\g<li_element></li></ul><p>', escaped_text).replace('</ul><p></p><ul>', '')
+    escaped_text = re.sub(r'\n\+\s(?P<li_element>[^\n]+)', '</p><ul><li>\g<li_element></li></ul><p>', escaped_text).replace('</ul><p></p><ul>', '')
     
     if escaped_text.endswith("<p>"):
         escaped_text = escaped_text[:-3]
