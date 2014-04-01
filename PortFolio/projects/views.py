@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.utils.datastructures import MultiValueDictKeyError
 
 from projects.forms import *
 from projects.models import *
@@ -87,10 +88,13 @@ def update_description(request, description_id):
         # Check form validity
         if form and form.is_valid():
             real_description = form.save(commit=False)
-            if request.FILES['image'] and isinstance(real_description, ImageDescription):
-                if real_description.image:
-                    os.remove(real_description.image.path)
-                real_description.image = request.FILES['image']
+            try:
+                if request.FILES['image'] and isinstance(real_description, ImageDescription):
+                    if real_description.image:
+                        os.remove(real_description.image.path)
+                    real_description.image = request.FILES['image']
+            except MultiValueDictKeyError, e:
+                pass
             real_description.save()
 
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[description.project.name_url]))
