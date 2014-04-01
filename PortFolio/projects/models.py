@@ -74,7 +74,7 @@ class InheritanceCastModel(models.Model):
 class Description(InheritanceCastModel):
     project = models.ForeignKey(Project, help_text=_("Project"))
     position = models.IntegerField(default=0, help_text=_("Description's position (the smallest at the top, default value implies last one)"))
-    data_anchor = models.CharField(max_length=50, blank=True, null=True, help_text=_("Data-anchor value (used to generate the wavy-menu)"))
+    data_anchor = models.CharField(max_length=50, blank=True, null=True, help_text=_("Data-anchor value (used to generate the wavy-menu) - optional"))
     
     def save(self, *args, **kwargs):
         """

@@ -28,5 +28,24 @@
       {% endfor %}
 	  </div>
 	{% endfor %}
+  {% if request.user.is_authenticated %}
+    <div class="details">
+      <h2 id="year" data-anchor="Add">???</h2>
+      <div class="postit-wrapper">
+        <a href="#">
+          <div class="postit add-project">
+            <h3>New Project</h3>
+            <p></p>
+          </div>
+        </a>
+      </div>
+    </div>
+  {% endif %}  
+{% endblock %}
+
+{% block js-preload %}
+  {% if request.user.is_authenticated %}
+    img_url.push("/static/img/more-on.png");
+  {% endif %}
 {% endblock %}
 

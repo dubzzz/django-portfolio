@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load project_extras %}
+{% load bootstrap %}
 
 {% block page_title %}{{ project.name }} - PortFolio{% endblock %}
 {% block title %}Project: {{ project.name }}{% endblock %}
@@ -21,15 +22,85 @@
   </ul>
   
   {% for description in project.description_set.all %}
-    {{ description|get_safe_html }}
+    {% if request.user.is_authenticated %}
+      <div class="editable">
+        <div class="description-editable">
+          <i class="glyphicon glyphicon-pencil form-edit"></i>
+          {{ description|get_safe_html }}
+        </div>
+        <form method="post" enctype="multipart/form-data" class="form-horizontal" action="#">
+        {% csrf_token %}
+          <i class="glyphicon glyphicon-remove form-close"></i>
+          {{ description|get_form|as_bootstrap }}
+          <div class="control-group"><div class="controls"><button class="btn btn-primary" onclick="submit">Submit</button></div></div>
+        </form>
+      </div>
+    {% else %}
+      {{ description|get_safe_html }}
+    {% endif %}
   {% endfor %}
-  
+
+  <div class="editable">
+    <div class="add-description">
+      <div id="rawtext"><h3>Raw Text</h3><p></p></div>
+      <div id="image"><h3>Image</h3><p></p></div>
+      <div id="htmlcode"><h3>Html Code</h3><p></p></div>
+    </div>
+    {% for name, form in empty_forms.items %}
+      <form method="post" enctype="multipart/form-data" class="form-horizontal form-for" action="{% url projects.views.add_description_to project.pk name %}" id="form-for-{{ name }}">
+      {% csrf_token %}
+        <i class="glyphicon glyphicon-remove form-close"></i>
+        {{ form|as_bootstrap }}
+        <div class="control-group"><div class="controls"><button class="btn btn-primary" onclick="submit">Submit</button></div></div>
+      </form>
+    {% endfor %}
+  </div>
+
   {% if project.download_set.all|length > 0 %}
     <ul class="downloads" data-anchor="Download">
     {% for down in project.download_set.all %}
       <li><a href="/media/{{ down.down }}" target="blank_">{{ down.down }}</a></li>
     {% endfor %}
     </ul>
+  {% endif %}
+
+  {% if request.user.is_authenticated %}
+    <script type="text/javascript">
+    <!--
+      $(".editable form").hide();
+      
+      $(".editable form .form-close").click(function() {
+        $(".editable form").hide();
+        $(".editable .description-editable").show();
+        $(".editable .add-description").show();
+      });
+      
+      $(".editable .description-editable .form-edit").click(function() {
+        $(".editable form").hide();
+        $(".editable .description-editable").show();
+        $(".editable .add-description").show();
+        
+        $(this).parent().hide();
+        $(this).parent().parent().find("form").first().show();
+      });
+      $(".editable .description-editable").dblclick(function() {
+        $(".editable form").hide();
+        $(".editable .description-editable").show();
+        $(".editable .add-description").show();
+         
+        $(this).hide();
+        $(this).parent().find("form").first().show();
+      });
+
+      $(".editable .add-description div").click(function() {
+        $(".editable form").hide();
+        $(".editable .description-editable").show();
+        $(this).parent().hide();
+
+        $(".editable form#form-for-" + this.getAttribute("id")).show();
+      });
+    -->
+    </script>
   {% endif %}
 {% endblock %}
 

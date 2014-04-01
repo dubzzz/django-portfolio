@@ -1,6 +1,7 @@
 form label
 {
 	width: 30%;
+	vertical-align: top;
 }
 
 form label+.controls
@@ -12,5 +13,10 @@ form label+.controls
 form .btn
 {
 	margin-left: 30%;
+}
+
+form .help-block
+{
+	font-size: 0.8em;
 }
 

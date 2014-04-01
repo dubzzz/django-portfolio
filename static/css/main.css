@@ -186,7 +186,7 @@ a:active
 	text-decoration: none;
 } /* selected link */
 
-.content > p:first-letter, .more-content > p:first-letter
+.content > p:first-letter, .description-editable > p:first-letter, .more-content > p:first-letter
 {
 	padding-left: 1em;
 }
@@ -285,6 +285,84 @@ ul.downloads li
 	list-style-image: url('/static/img/download.png');
 }
 
+.content .editable .description-editable
+{
+	padding: 1px;
+	position: relative;
+}
+
+.content .editable .description-editable:hover
+{
+	border: dashed 1px #777;
+	padding: 0px;
+}
+
+.content .editable .description-editable .form-edit
+{
+	display: none;
+}
+
+.content .editable .description-editable:hover .form-edit
+{
+	display: inline-block;
+	position: absolute;
+	
+	top: 5px;
+	right: 5px;
+	cursor: pointer;
+}
+
+.content .editable form
+{
+	border: dashed 1px #777;
+	padding: 5px;
+	margin-bottom: 20px
+}
+
+.content .editable form .form-close
+{
+	float: right;
+	cursor: pointer;
+}
+
+.content .editable .add-description
+{
+	text-align: center;
+}
+
+.content .editable .add-description div
+{
+	display: inline-block;
+	width: 125px;
+	height: 175px;
+
+	margin-top: 10px;
+
+	background: #fff;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+
+	cursor: pointer;
+}
+
+.content .editable .add-description div h3
+{
+	margin: 0px;
+	margin-top: 10px;
+}
+
+.content .editable .add-description div p
+{
+	display: block;
+	width: 125px;
+	height: 125px;
+
+	background-image: url('/static/img/more-off.png');
+	background-repeat: no-repeat;
+	background-position: left 0px top 0px;
+}
+
 /* YEAR LABEL */
 
 .content p+.details
@@ -364,6 +442,21 @@ ul.downloads li
 	cursor: pointer;
 
 	-webkit-backface-visibity: hidden; /* anti-aliasing effect for Chrome (+translate3d) */
+}
+
+.content .details .postit.add-project p
+{
+	background-image: url('/static/img/more-off.png');
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+
+	width: 100%;
+	height: 125px;
+}
+
+.content .details .postit.add-project:hover p
+{
+	background-image: url('/static/img/more-on.png');
 }
 
 .content .details:nth-of-type(4n) .postit-wrapper:nth-of-type(4n) .postit,
