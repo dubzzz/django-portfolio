@@ -6,9 +6,15 @@ admin.site.register(Category)
 admin.site.register(Technology)
 admin.site.register(Download)
 
-class SubDescriptionInline(admin.StackedInline):
-    model = SubDescription
-    extra = 1
+class RawTextDescriptionInline(admin.StackedInline):
+    model = RawTextDescription
+    extra = 0
+class HtmlCodeDescriptionInline(admin.StackedInline):
+    model = HtmlCodeDescription
+    extra = 0
+class ImageDescriptionInline(admin.StackedInline):
+    model = ImageDescription
+    extra = 0
 
 class DownloadInline(admin.StackedInline):
     model = Download
@@ -20,7 +26,7 @@ class ProjectAdmin(admin.ModelAdmin):
         ('Détails élementaires', {'fields': ['short_description', 'year']}),
         ('Appartenance', {'fields': ['category', 'technologies']}),
     ]
-    inlines = [SubDescriptionInline, DownloadInline]
+    inlines = [RawTextDescriptionInline, HtmlCodeDescriptionInline, ImageDescriptionInline, DownloadInline]
 
 admin.site.register(Project, ProjectAdmin)
 

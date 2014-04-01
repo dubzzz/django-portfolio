@@ -20,20 +20,8 @@
     {% endfor %}
   </ul>
   
-  {% for subdescription in project.subdescription_set.all %}
-    {% if subdescription.description %}
-      {% if subdescription.html_description %}
-        {{ subdescription.description|safe }}
-      {% else %}
-        {{ subdescription.description|escape_project:subdescription.data_anchor }}
-      {% endif %}
-    {% endif %}
-    {% if subdescription.image %}
-    <p class="image" {% if not subdescription.description %}data-anchor="{{ subdescription.data_anchor }}"{% endif %}>
-        <img src="/media/{{ subdescription.image }}" alt="{{ subdescription.legend }}" />
-        <br/><span class="legend">{{ subdescription.legend }}</span>
-      </p>
-    {% endif %}
+  {% for description in project.description_set.all %}
+    {{ description|get_safe_html }}
   {% endfor %}
   
   {% if project.download_set.all|length > 0 %}
