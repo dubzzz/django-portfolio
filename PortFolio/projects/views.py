@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
@@ -87,6 +88,8 @@ def update_description(request, description_id):
         if form and form.is_valid():
             real_description = form.save(commit=False)
             if request.FILES['image'] and isinstance(real_description, ImageDescription):
+                if real_description.image:
+                    os.remove(real_description.image.path)
                 real_description.image = request.FILES['image']
             real_description.save()
 
