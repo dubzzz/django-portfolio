@@ -28,7 +28,7 @@
           <i class="glyphicon glyphicon-pencil form-edit"></i>
           {{ description|get_safe_html }}
         </div>
-        <form method="post" enctype="multipart/form-data" class="form-horizontal" action="#">
+        <form method="post" enctype="multipart/form-data" class="form-horizontal" action="{% url projects.views.update_description description.pk %}">
         {% csrf_token %}
           <i class="glyphicon glyphicon-remove form-close"></i>
           {{ description|get_form|as_bootstrap }}
