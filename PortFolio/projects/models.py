@@ -37,20 +37,6 @@ class Project(models.Model):
     def __unicode__(self):
         return self.name
 
-class SubDescription(models.Model):
-    def upload_path(self, filename):
-        return os.path.join('description', str(self.project.id), filename)
-
-    project = models.ForeignKey(Project, help_text="Projet concerné")
-    
-    html_description = models.BooleanField(default=False, help_text="Code HTML ?")
-    description = models.TextField(blank=True, null=True, help_text="Description")
-    
-    image = models.ImageField(upload_to=upload_path, blank=True, null=True, help_text="Image")
-    legend = models.CharField(max_length=150, blank=True, null=True, help_text="Légende de l'image")
-
-    data_anchor = models.CharField(max_length=50, blank=True, null=True, help_text="Data-anchor pour le paragraphe ou l'image (pour non code-HTML)")
-
 class Download(models.Model):
     def upload_path(self, filename):
         if self.project:
