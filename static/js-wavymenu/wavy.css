@@ -1,0 +1,104 @@
+.menu-items-right
+{
+	position: absolute;
+	display: none;
+	z-index: 1;
+
+	padding-left: 0px;
+}
+
+.menu-items-right li
+{
+	position: relative;
+	margin-bottom: 2px;
+	list-style-type: none;
+	text-align: right;
+	cursor: pointer;
+	/*width: 100px; *//* at least 10 + max left */
+	padding-left: 40px;
+	left: 0px;
+
+	border-right: solid 5px #ffbf87;
+	padding-right: 5px;
+	
+	font-size: 0.8em;
+	color: #ac6832;
+
+	animation: animate-menu-items-right-off 0.2s;
+	animation-fill-mode: both;
+	-webkit-animation: animate-menu-items-right-off 0.2s;
+	-webkit-animation-fill-mode: both;
+}
+
+.menu-items-right li img
+{
+	max-height: 0.8em;
+}
+
+@keyframes animate-menu-items-right-off
+{
+	from
+	{
+		left: 70%;
+	}
+	to
+	{
+		left: 0px;
+	}
+}
+
+@-webkit-keyframes animate-menu-items-right-off
+{
+	from
+	{
+		left: 70%;
+	}
+	to
+	{
+		left: 0px;
+	}
+}
+
+.menu-items-right li:hover
+{
+	border-right: solid 5px #ac6832;
+	left: 70%;
+	
+	animation: animate-menu-items-right-on 0.4s;
+	animation-fill-mode: both;
+	-webkit-animation: animate-menu-items-right-on 0.4s;
+	-webkit-animation-fill-mode: both;
+}
+
+@keyframes animate-menu-items-right-on
+{
+	from
+	{
+		left: 0px;
+	}
+	75%
+	{
+		left: 80%;
+	}
+	to
+	{
+		left: 70%;
+	}
+}
+
+@-webkit-keyframes animate-menu-items-right-on
+{
+	from
+	{
+		left: 0px;
+	}
+	75%
+	{
+		left: 80%;
+	}
+	to
+	{
+		left: 70%;
+	}
+}
+
