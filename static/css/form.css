@@ -1,0 +1,16 @@
+form label
+{
+	width: 30%;
+}
+
+form label+.controls
+{
+	display: inline-block;
+	margin-left: 20px;
+}
+
+form .btn
+{
+	margin-left: 30%;
+}
+

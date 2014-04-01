@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block page_title %}PortFolio - Login page{% endblock %}
+{% block title %}PortFolio- Login page{% endblock %}
+{% block page_description %}Career portfolio - Login page{% endblock %}
+
+{% block breadcrumb %}
+  <li><a href="{% url projects.views.home %}">Home</a></li>
+  <li class="active">Login page</li>
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+	<div>
+		<a href="{% url projects.views.logout %}" style="float: right;"><i class="icon-off"></i> Déconnexion</a>
+		<h2>Login to PortFolio</h2>
+	</div>
+	
+	<p style="text-align:center;">
+		You're already logged in as {{ request.user.username }}
+		<br/><a href="{% url equipe.views.accueil %}"><i class="icon-home"></i> Retour à l'accueil</a>
+	</p>
+{% else %}
+	{% if form.errors %}
+	<div class="alert alert-error alert-block">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<h4>Error</h4>
+		Login or Password wrong
+	</div>
+	{% endif %}
+	
+	<div style="position:relative;">
+		<h2>Login to PortFolio</h2>
+	</div>
+	
+	<form method="post" class="form-horizontal" action="{% url django.contrib.auth.views.login %}">
+	{% csrf_token %}
+		{{ form|as_bootstrap }}
+		<div class="control-group"><div class="controls"><button class="btn btn-primary" onclick="submit">Login</button></div></div>
+		<input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}" />
+	</form>
+{% endif %}
+{% endblock %}

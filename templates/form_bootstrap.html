@@ -1,0 +1,12 @@
+{{ form.media }}
+{% for field in form %}
+	<div class="control-group" id="{{ prefixe }}_{{ field.id_for_label }}">
+	<label class="control-label{% if field.field.required %} required{% endif %}" for="{{ field.html_name }}">{{ field.label }}</label>
+	<div class="controls">
+		{{ field }}
+		<span class="text-error">{% for e in field.errors %}{% if forloop.counter != 1 %}, {% endif %}{{ e }}{% endfor %}</span>
+		<span class="help-block">{{ field.help_text }}</span>
+	</div>
+	</div>
+{% endfor %}
+

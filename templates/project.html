@@ -6,7 +6,7 @@
 {% block page_description %}{{ project.short_description }}{% endblock %}
 
 {% block breadcrumb %}
-<li><a href="{% url projects.views.home %}">Home</a></li>
+  <li><a href="{% url projects.views.home %}">Home</a></li>
   <li><a href="#">{{ project.year }}</a></li>
   <li class="active">{{ project.name }}</li>
 {% endblock %}
