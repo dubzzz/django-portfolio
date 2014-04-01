@@ -68,7 +68,7 @@
 	text-shadow: 0px 2px 3px #ffbf87;
 }
 
-.header p a
+.header p a, .footer p a
 {
 	color: #bd7638;
 	text-shadow: 0px 2px 3px #ffbf87;

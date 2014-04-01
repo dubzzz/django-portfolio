@@ -89,6 +89,13 @@
       <a href="{{ quicklink.1 }}" target="blank_" title="{{ quicklink.0 }}"><img src="{{ quicklink.3 }}" onmouseover="this.src='{{ quicklink.2|escapejs }}';" onmouseout="this.src='{{ quicklink.3|escapejs }}';" alt="{{ quicklink.0 }}" /></a>
       {% endfor %}
     </p>
+    <p class="goto-login">
+      {% if request.user.is_authenticated %}
+        <a href="{% url projects.views.logout %}"><i class="glyphicon glyphicon-off"></i> Logout</a>
+      {% else %}
+        <a href="{% url django.contrib.auth.views.login %}?next={{ request.path }}"><i class="glyphicon glyphicon-off"></i> Login</a>
+      {% endif %}
+    </p>
   </div>
 </div>
 <script type="text/javascript">

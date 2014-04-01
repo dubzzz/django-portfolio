@@ -13,13 +13,13 @@
 {% block content %}
 {% if request.user.is_authenticated %}
 	<div>
-		<a href="{% url projects.views.logout %}" style="float: right;"><i class="icon-off"></i> Logout</a>
+		<a href="{% url projects.views.logout %}" style="float: right;"><i class="glyphicon glyphicon-off"></i> Logout</a>
 		<h2>Login to PortFolio</h2>
 	</div>
 	
 	<p style="text-align:center;">
 		You're already logged in as {{ request.user.username }}
-		<br/><a href="{% url projects.views.home %}"><i class="icon-home"></i> Back to Home</a>
+		<br/><a href="{% url projects.views.home %}"><i class="glyphicon glyphicon-home"></i> Back to Home</a>
 	</p>
 {% else %}
 	{% if form.errors %}
