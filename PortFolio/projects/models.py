@@ -10,29 +10,30 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
 
 class Category(models.Model): #eg.: Security/Game/Network..
-    name = models.CharField(max_length=50, help_text="Nom de la catégorie")
-    name_url = models.CharField(max_length=20, help_text="Nom de la catégorie (URL)")
+    name = models.CharField(max_length=50, help_text=_("Category name"))
+    name_url = models.CharField(max_length=20, help_text=_("Category name (URL)"))
 
     def __unicode__(self):
         return self.name
 
 class Technology(models.Model): #eg.: C/SDL/Java..
-    name = models.CharField(max_length=50, help_text="Nom de la technologie")
-    name_url = models.CharField(max_length=20, help_text="Nom de la technologie (URL)")
+    name = models.CharField(max_length=50, help_text=_("Technology name"))
+    name_url = models.CharField(max_length=20, help_text=_("Technology name (URL)"))
     
     def __unicode__(self):
         return self.name
 
 class Project(models.Model):
-    name = models.CharField(max_length=50, help_text="Nom du projet")
-    name_url = models.CharField(max_length=20, help_text="Nom du projet (URL)")
-    short_description = models.CharField(max_length=155, help_text="Court descriptif")
-    year = models.IntegerField(help_text="Année de lancement du projet")
+    name = models.CharField(max_length=50, help_text=_("Project name"))
+    name_url = models.CharField(max_length=20, help_text=_("Project name (URL)"))
+    short_description = models.CharField(max_length=155, help_text=_("Short description (max. 155)"))
+    year = models.IntegerField(help_text=_("Release date"))
     
-    category = models.ForeignKey(Category, help_text="Catégorie à laquelle appartient ce projet")
-    technologies = models.ManyToManyField(Technology, help_text="Technologies liées à ce projet")
+    category = models.ForeignKey(Category, help_text=_("Category"))
+    technologies = models.ManyToManyField(Technology, help_text=_("Technologies"))
     
     def __unicode__(self):
         return self.name
@@ -44,8 +45,8 @@ class Download(models.Model):
         else:
             return os.path.join('downloads', filename)
     
-    project = models.ForeignKey(Project, blank=True, null=True, help_text="Projet concerné")
-    down = models.FileField(upload_to=upload_path, help_text="Fichier pouvant être téléchargé par l'utilisateur")
+    project = models.ForeignKey(Project, blank=True, null=True, help_text=_("Linked to the project"))
+    down = models.FileField(upload_to=upload_path, help_text=_("Downloadable file"))
 
 class InheritanceCastModel(models.Model):
     """
@@ -71,9 +72,9 @@ class InheritanceCastModel(models.Model):
         abstract = True
 
 class Description(InheritanceCastModel):
-    project = models.ForeignKey(Project, help_text="Projet concerné")
-    position = models.IntegerField(default=0, help_text="Position de la description (plus faible => en haut), prend la valeur suivante si non définie ou égale à 0")
-    data_anchor = models.CharField(max_length=50, blank=True, null=True, help_text="Data-anchor pour le paragraphe ou l'image (pour non code-HTML)")
+    project = models.ForeignKey(Project, help_text=_("Project"))
+    position = models.IntegerField(default=0, help_text=_("Description's position (the smallest at the top, default value implies last one)"))
+    data_anchor = models.CharField(max_length=50, blank=True, null=True, help_text=_("Data-anchor value (used to generate the wavy-menu)"))
     
     def save(self, *args, **kwargs):
         """
@@ -111,7 +112,7 @@ class Description(InheritanceCastModel):
         ordering = ["position"]
 
 class RawTextDescription(Description):
-    description = models.TextField(help_text="Description")
+    description = models.TextField(help_text=_("Description"))
 
     def get_safe_html(self, parent=None):
         """
@@ -183,7 +184,7 @@ class RawTextDescription(Description):
         return escaped_text
 
 class HtmlCodeDescription(Description):
-    description = models.TextField(help_text="Description")
+    description = models.TextField(help_text=_("Description"))
 
     def get_safe_html(self, parent=None):
         return self.description
@@ -193,8 +194,8 @@ class ImageDescription(Description):
         parent = super(ImageDescription, self)
         return os.path.join('description', str(parent.project.id), filename)
 
-    image = models.ImageField(upload_to=upload_path, help_text="Image")
-    legend = models.CharField(max_length=150, help_text="Légende de l'image")
+    image = models.ImageField(upload_to=upload_path, help_text=_("Image"))
+    legend = models.CharField(max_length=150, help_text=_("Image legend"))
     
     def get_safe_html(self):
         return """<p class="image"><img src="/media/%s" alt="%s" /><br/><span class="legend">%s</span></p>""" % (escape(self.image), escape(self.legend), escape(self.legend))
