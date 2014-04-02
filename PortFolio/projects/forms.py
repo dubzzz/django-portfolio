@@ -17,3 +17,9 @@ class ImageDescriptionForm(forms.ModelForm):
         model = ImageDescription
         fields = ('data_anchor', 'image', 'legend',)
 
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        exclude = []
+        #fields = '__all__'
+

@@ -14,6 +14,12 @@
 {% endblock %}
 
 {% block content %}
+  {% if request.user.is_authenticated %}
+    <div class="editable">
+      <div class="description-editable">
+        <i class="glyphicon glyphicon-pencil form-edit"></i>
+  {% endif %}
+  
   <p class="short-description">{{ project.short_description }}</p>
   <p class="category">{{ project.category.name }}</p>
   <ul class="technology">
@@ -21,7 +27,20 @@
       <li>{{ techno.name }}</li>
     {% endfor %}
   </ul>
-  
+
+  {% if request.user.is_authenticated %}
+      </div>
+      <form method="post" class="form-horizontal" action="{% url projects.views.update_project project.pk %}">
+      {% csrf_token %}
+        <i class="glyphicon glyphicon-remove form-close"></i>
+        {{ empty_project_form|as_bootstrap }}
+        <div class="control-group"><div class="controls">
+            <button class="btn btn-primary" onclick="submit">Submit</button>
+        </div></div>
+      </form>
+    </div>
+  {% endif %}
+
   {% for description in project.description_set.all %}
     {% if request.user.is_authenticated %}
       <div class="editable">
@@ -61,6 +80,7 @@
         <div class="control-group"><div class="controls">
             <button class="btn btn-primary" onclick="submit">Submit</button>
         </div></div>
+        B
       </form>
     {% endfor %}
   </div>
@@ -112,6 +132,12 @@
       });
     -->
     </script>
+  {% endif %}
+{% endblock %}
+
+{% block js-preload %}
+  {% if request.user.is_authenticated %}
+    img_url.push("/static/img/more-on.png");
   {% endif %}
 {% endblock %}
 

@@ -191,7 +191,7 @@ a:active
 	padding-left: 1em;
 }
 
-.content > p.short-description:first-letter, .content > p.category:first-letter
+.content p.short-description:first-letter, .content p.category:first-letter
 {
 	padding-left: 0px;
 }
@@ -312,14 +312,15 @@ ul.downloads li
 	cursor: pointer;
 }
 
-.content .editable form
+.content .editable form, .content #add-project form
 {
 	border: dashed 1px #777;
 	padding: 5px;
-	margin-bottom: 20px
+	margin-bottom: 20px;
+	text-align: left;
 }
 
-.content .editable form .form-close
+.content .editable form .form-close, .content #add-project form .form-close
 {
 	float: right;
 	cursor: pointer;
@@ -361,6 +362,11 @@ ul.downloads li
 	background-image: url('/static/img/more-off.png');
 	background-repeat: no-repeat;
 	background-position: left 0px top 0px;
+}
+
+.content .editable .add-description div:hover p
+{
+	background-image: url('/static/img/more-on.png');
 }
 
 /* YEAR LABEL */

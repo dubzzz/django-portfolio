@@ -15,13 +15,17 @@ from projects.forms import *
 from projects.models import *
 
 def home(request):
-    return render_to_response('home.html', {"projects": Project.objects.all().order_by("-year")}, context_instance=RequestContext(request))
+    if request.user.is_authenticated():
+        return render_to_response('home.html', {"projects": Project.objects.all().order_by("-year"), "empty_project_form": ProjectForm()}, context_instance=RequestContext(request))
+    else:    
+        return render_to_response('home.html', {"projects": Project.objects.all().order_by("-year")}, context_instance=RequestContext(request))
 
 def show_project(request, project_url):
     project = get_object_or_404(Project, name_url=project_url)
     if request.user.is_authenticated():
+        empty_project_form = ProjectForm(instance=project)
         empty_forms = {"rawtext": RawTextDescriptionForm(), "htmlcode": HtmlCodeDescriptionForm(), "image": ImageDescriptionForm()}
-        return render_to_response('project.html', {"project": project, "empty_forms": empty_forms}, context_instance=RequestContext(request))
+        return render_to_response('project.html', {"project": project, "empty_project_form": empty_project_form, "empty_forms": empty_forms}, context_instance=RequestContext(request))
     else:
         return render_to_response('project.html', {"project": project}, context_instance=RequestContext(request))
 
@@ -35,6 +39,43 @@ def logout(request):
         return HttpResponseRedirect(request.GET["next"])
     else:
         return HttpResponseRedirect(reverse('django.contrib.auth.views.login'))
+
+@login_required
+def add_project(request):
+    """
+    Add a new project
+    """
+    
+    project = None
+    # Check that the request has been transmitted in POST
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        
+        # Check form validity
+        if form.is_valid():
+            project = form.save()
+    
+    if project:
+        return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+    else:    
+        return HttpResponseRedirect(reverse('projects.views.home'))
+
+@login_required
+def update_project(request, project_id):
+    """
+    Update project's fields
+    """
+    project = get_object_or_404(Project, pk=project_id)
+    
+    # Check that the request has been transmitted in POST
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, instance=project)
+        
+        # Check form validity
+        if form.is_valid():
+            form.save()
+
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 
 @login_required
 def add_description_to(request, project_id, description_type):
