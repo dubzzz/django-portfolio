@@ -21,5 +21,9 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         exclude = []
-        #fields = '__all__'
+
+class DownloadForm(forms.ModelForm):
+    class Meta:
+        model = Download
+        fields = ('down',)
 

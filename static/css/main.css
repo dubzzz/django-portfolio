@@ -285,24 +285,24 @@ ul.downloads li
 	list-style-image: url('/static/img/download.png');
 }
 
-.content .editable .description-editable
+.content .editable div.description-editable
 {
 	padding: 1px;
 	position: relative;
 }
 
-.content .editable .description-editable:hover
+.content .editable div.description-editable:hover
 {
 	border: dashed 1px #777;
 	padding: 0px;
 }
 
-.content .editable .description-editable .form-edit
+.content .editable div.description-editable .form-edit
 {
 	display: none;
 }
 
-.content .editable .description-editable:hover .form-edit
+.content .editable div.description-editable:hover .form-edit
 {
 	display: inline-block;
 	position: absolute;

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
@@ -14,6 +15,9 @@ from django.utils.datastructures import MultiValueDictKeyError
 from projects.forms import *
 from projects.models import *
 
+def log(text):
+    print >>sys.stderr, text
+
 def home(request):
     if request.user.is_authenticated():
         return render_to_response('home.html', {"projects": Project.objects.all().order_by("-year"), "empty_project_form": ProjectForm()}, context_instance=RequestContext(request))
@@ -23,9 +27,10 @@ def home(request):
 def show_project(request, project_url):
     project = get_object_or_404(Project, name_url=project_url)
     if request.user.is_authenticated():
-        empty_project_form = ProjectForm(instance=project)
+        project_form = ProjectForm(instance=project)
+        empty_download_form = DownloadForm()
         empty_forms = {"rawtext": RawTextDescriptionForm(), "htmlcode": HtmlCodeDescriptionForm(), "image": ImageDescriptionForm()}
-        return render_to_response('project.html', {"project": project, "empty_project_form": empty_project_form, "empty_forms": empty_forms}, context_instance=RequestContext(request))
+        return render_to_response('project.html', {"project": project, "project_form": project_form, "empty_download_form": empty_download_form, "empty_forms": empty_forms}, context_instance=RequestContext(request))
     else:
         return render_to_response('project.html', {"project": project}, context_instance=RequestContext(request))
 
@@ -238,5 +243,38 @@ def move_down_description(request, description_id):
         
     except IndexError, e:
         pass # The description is already the one at the top
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+
+@login_required
+def add_download_to(request, project_id):
+    """
+    Add download to a project
+    """
+    
+    project = get_object_or_404(Project, pk=project_id)
+    
+    # Check that the request has been transmitted in POST
+    if request.method == 'POST':
+        form = DownloadForm(request.POST, request.FILES)
+        # Check form validity
+        if form.is_valid():
+            down = form.save(commit=False)
+            down.project = project
+            down.save()
+    
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+
+@login_required
+def delete_download(request, download_id):
+    """
+    Delete the download
+    """
+    
+    down = get_object_or_404(Download, pk=download_id)
+    project = down.project
+    
+    os.remove(down.down.path)
+    down.delete()
+
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 
