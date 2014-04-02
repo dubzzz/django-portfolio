@@ -156,6 +156,7 @@ def move_up_description(request, description_id):
         pass # The description is already the one at the top
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 
+@login_required
 def move_down_description(request, description_id):
     """
     Change the description's position field in order to have
