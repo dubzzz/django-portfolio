@@ -112,7 +112,7 @@ class Description(InheritanceCastModel):
         ordering = ["position"]
 
 class RawTextDescription(Description):
-    description = models.TextField(help_text=_("Description"))
+    description = models.TextField(help_text=_("Description - Raw Text"))
 
     def get_safe_html(self, parent=None):
         """
@@ -184,7 +184,7 @@ class RawTextDescription(Description):
         return escaped_text
 
 class HtmlCodeDescription(Description):
-    description = models.TextField(help_text=_("Description"))
+    description = models.TextField(help_text=_("Description - Html Code"))
 
     def get_safe_html(self, parent=None):
         return self.description
