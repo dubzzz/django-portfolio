@@ -160,6 +160,11 @@ body
 	font-size: 10px;
 }
 
+.content img.image_from_rawtext
+{
+	height: 1em;
+}
+
 a
 {
 	font-weight: bold;

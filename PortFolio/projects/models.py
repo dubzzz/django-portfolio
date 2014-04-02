@@ -137,14 +137,19 @@ class RawTextDescription(Description):
         This templatetag converts every url in text to an hyperlink.
         The text is escaped for HTML before adding hyperlinks.
 
-        URL to link
-        -----------
+        URL to link/image
+        -----------------
         
         INPUT: need to start with a space or new line..
             Please visit: http://portfolio.dubien.me/
         OUTPUT:
             <p>Please visit: <a href="http://portfolio.dubien.me/" target="blank_">http://portfolio.dubien.me/</a></p>
         
+        INPUT:
+            ![my favicon](http://portfolio.dubien.me/favicon.ico)
+        OUTPUT:
+            <p><img src="http://portfolio.dubien.me/favicon.ico" alt="my favicon" class="image_from_rawtext" /></p>
+
         INPUT:
             [Click here](http://portfolio.dubien.me/) to try it!
         OUTPUT:
@@ -175,9 +180,10 @@ class RawTextDescription(Description):
 
         escaped_text = escape(self.description)
 
-        # URL to link
+        # URL to link/image
 
         escaped_text = re.sub(r'(?P<begin>^|\n|\s)(?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)', '\g<begin><a href="\g<url>" target="blank_">\g<url></a>', escaped_text)
+        escaped_text = re.sub(r'!\[(?P<alt>[^\]]*)\]\((?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)\)', '<img src="\g<url>" alt="\g<alt>" class="image_from_rawtext" />', escaped_text)
         escaped_text = re.sub(r'\[(?P<title>[^\]]+)\]\((?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)\)', '<a href="\g<url>" target="blank_">\g<title></a>', escaped_text)
         
         # Bulletpoints to list
