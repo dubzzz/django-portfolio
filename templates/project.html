@@ -5,6 +5,7 @@
 {% block page_title %}{{ project.name }} - PortFolio{% endblock %}
 {% block title %}Project: {{ project.name }}{% endblock %}
 {% block page_description %}{{ project.short_description }}{% endblock %}
+{% block additional_js %}<script src='/static/js/clear-selection.js'></script>{% endblock %}
 
 {% block breadcrumb %}
   <li><a href="{% url projects.views.home %}">Home</a></li>
@@ -94,6 +95,7 @@
         $(".editable form").hide();
         $(".editable .description-editable").show();
         $(".editable .add-description").show();
+        clear_selection();
          
         $(this).hide();
         $(this).parent().find("form").first().show();
