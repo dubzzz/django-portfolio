@@ -371,9 +371,14 @@ ul.downloads li
 
 /* YEAR LABEL */
 
-.content p+.details
+.content .details
 {
 	margin-top: 50px;
+}
+
+.content .details+.details
+{
+	margin-top: 0px;
 }
 
 .content .details
