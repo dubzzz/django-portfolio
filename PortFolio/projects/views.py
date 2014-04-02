@@ -65,6 +65,7 @@ def update_project(request, project_id):
     """
     Update project's fields
     """
+
     project = get_object_or_404(Project, pk=project_id)
     
     # Check that the request has been transmitted in POST
@@ -76,6 +77,16 @@ def update_project(request, project_id):
             form.save()
 
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+
+@login_required
+def delete_project(request, project_id):
+    """
+    Delete project
+    """
+    
+    project = get_object_or_404(Project, pk=project_id)
+    project.delete()
+    return HttpResponseRedirect(reverse('projects.views.home'))
 
 @login_required
 def add_description_to(request, project_id, description_type):

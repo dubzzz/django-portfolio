@@ -36,6 +36,7 @@
         {{ empty_project_form|as_bootstrap }}
         <div class="control-group"><div class="controls">
             <button class="btn btn-primary" onclick="submit">Submit</button>
+            <a data-confirm="Do you really want to delete this Project?" href="{% url projects.views.delete_project project.pk %}" class="btn btn-danger">Delete Project</a>
         </div></div>
       </form>
     </div>
