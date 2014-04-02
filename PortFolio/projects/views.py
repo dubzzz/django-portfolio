@@ -168,9 +168,7 @@ def delete_description(request, description_id):
 
     project = description.project
     
-    if isinstance(real_description, ImageDescription):
-            os.remove(real_description.image.path)
-    real_description.delete()
+    real_description.delete() # pre_delete is automatically called to delete files (if required)
 
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 
@@ -273,8 +271,7 @@ def delete_download(request, download_id):
     down = get_object_or_404(Download, pk=download_id)
     project = down.project
     
-    os.remove(down.down.path)
-    down.delete()
+    down.delete() # pre_delete is automatically called to delete files (if required)
 
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 

@@ -12,6 +12,9 @@ from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+
 class Category(models.Model): #eg.: Security/Game/Network..
     name = models.CharField(max_length=50, help_text=_("Category name"))
     name_url = models.CharField(max_length=20, help_text=_("Category name (URL)"))
@@ -38,6 +41,16 @@ class Project(models.Model):
     def __unicode__(self):
         return self.name
 
+@receiver(pre_delete, sender=Project, dispatch_uid='project_delete_signal')
+def pre_delete_project(sender, instance, using, **kwargs):
+    """
+    Normally these commands should be done by Django itself,
+    it is just to make sure that everything is deleted properly
+    """
+
+    instance.download_set.all().delete()
+    instance.description_set.all().delete()
+
 class Download(models.Model):
     def upload_path(self, filename):
         if self.project:
@@ -47,6 +60,11 @@ class Download(models.Model):
     
     project = models.ForeignKey(Project, blank=True, null=True, help_text=_("Linked to the project"))
     down = models.FileField(upload_to=upload_path, help_text=_("Downloadable file"))
+
+@receiver(pre_delete, sender=Download, dispatch_uid='download_delete_signal')
+def pre_delete_download(sender, instance, using, **kwargs):
+    if os.path.isfile(instance.down.path):
+        os.remove(instance.down.path)
 
 class InheritanceCastModel(models.Model):
     """
@@ -199,4 +217,9 @@ class ImageDescription(Description):
     
     def get_safe_html(self):
         return """<p class="image"><img src="/media/%s" alt="%s" /><br/><span class="legend">%s</span></p>""" % (escape(self.image), escape(self.legend), escape(self.legend))
+
+@receiver(pre_delete, sender=ImageDescription, dispatch_uid='imagedescription_delete_signal')
+def pre_delete_imagedescription(sender, instance, using, **kwargs):
+    if os.path.isfile(instance.image.path):
+        os.remove(instance.image.path)
 
