@@ -46,6 +46,7 @@
     {% endif %}
   {% endfor %}
 
+  {% if request.user.is_authenticated %}
   <div class="editable">
     <div class="add-description">
       <div id="rawtext"><h3>Raw Text</h3><p></p></div>
@@ -63,6 +64,7 @@
       </form>
     {% endfor %}
   </div>
+  {% endif %}
 
   {% if project.download_set.all|length > 0 %}
     <ul class="downloads" data-anchor="Download">
