@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -98,4 +99,91 @@ def update_description(request, description_id):
             real_description.save()
 
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[description.project.name_url]))
+
+@login_required
+def delete_description(request, description_id):
+    """
+    Delete the description
+    """
+    
+    description = get_object_or_404(Description, pk=description_id)
+    real_description = description.cast()
+
+    project = description.project
+    
+    if isinstance(real_description, ImageDescription):
+            os.remove(real_description.image.path)
+    real_description.delete()
+
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+
+def restore_descriptions_positions(project):
+    current_pos = 1
+    for desc in project.description_set.all():
+        desc.position = current_pos
+        desc.save()
+        current_pos += 1
+
+@login_required
+def move_up_description(request, description_id):
+    """
+    Change the description's position field in order to have
+    this description above the one just before
+    """
+    
+    description = get_object_or_404(Description, pk=description_id)
+    project = description.project
+    
+    # Get all the decriptions that are before
+    try:
+        prev_description = project.description_set.filter(Q(position__lt=description.position) | Q(pk__lt=description.pk, position=description.position)).order_by('-position')[0]
+        
+        # Recreate positions based on current position in the set before reordering anything
+        if description.position == prev_description.position:
+            restore_descriptions_positions(project)
+
+            description = get_object_or_404(Description, pk=description_id)
+            prev_description = project.description_set.filter(Q(position__lt=description.position) | Q(pk__lt=description.pk, position=description.position)).order_by('-position')[0]
+        
+        current_position = description.position
+        description.position = prev_description.position
+        prev_description.position = current_position
+        
+        description.save()
+        prev_description.save()
+        
+    except IndexError, e:
+        pass # The description is already the one at the top
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+
+def move_down_description(request, description_id):
+    """
+    Change the description's position field in order to have
+    this description below the one just after
+    """
+    
+    description = get_object_or_404(Description, pk=description_id)
+    project = description.project
+    
+    # Get all the decriptions that are before
+    try:
+        prev_description = project.description_set.filter(Q(position__gt=description.position) | Q(pk__gt=description.pk, position=description.position)).order_by('position')[0]
+        
+        # Recreate positions based on current position in the set before reordering anything
+        if description.position == prev_description.position:
+            restore_descriptions_positions(project)
+
+            description = get_object_or_404(Description, pk=description_id)
+            prev_description = project.description_set.filter(Q(position__gt=description.position) | Q(pk__gt=description.pk, position=description.position)).order_by('position')[0]
+        
+        current_position = description.position
+        description.position = prev_description.position
+        prev_description.position = current_position
+        
+        description.save()
+        prev_description.save()
+        
+    except IndexError, e:
+        pass # The description is already the one at the top
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 

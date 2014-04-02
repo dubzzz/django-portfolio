@@ -522,3 +522,21 @@ ul.downloads li
 	font-weight: normal;
 }
 
+a.btn
+{
+	color: #fff;
+}
+
+/* MODAL */
+
+.modal
+{
+	color: #ffffff;
+}
+
+.modal-backdrop.in
+{
+	opacity: .75;
+	filter: alpha(opacity=75);
+}
+

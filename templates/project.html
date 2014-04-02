@@ -32,7 +32,12 @@
         {% csrf_token %}
           <i class="glyphicon glyphicon-remove form-close"></i>
           {{ description|get_form|as_bootstrap }}
-          <div class="control-group"><div class="controls"><button class="btn btn-primary" onclick="submit">Submit</button></div></div>
+          <div class="control-group"><div class="controls">
+              <button class="btn btn-primary" onclick="submit">Submit</button>
+              <a data-confirm="Do you really want to move it one step up?" href="{% url projects.views.move_up_description description.pk %}" class="btn btn-warning" {% if forloop.first %}disabled="disabled"{% endif %}><i class="glyphicon glyphicon-chevron-up"></i> Up</a>
+              <a data-confirm="Do you really want to move it one step down?" href="{% url projects.views.move_down_description description.pk %}" class="btn btn-warning" {% if forloop.last %}disabled="disabled"{% endif %}><i class="glyphicon glyphicon-chevron-down"></i> Down</a>
+              <a data-confirm="Do you really want to delete this Description?" href="{% url projects.views.delete_description description.pk %}" class="btn btn-danger">Delete</a>
+          </div></div>
         </form>
       </div>
     {% else %}
@@ -51,7 +56,9 @@
       {% csrf_token %}
         <i class="glyphicon glyphicon-remove form-close"></i>
         {{ form|as_bootstrap }}
-        <div class="control-group"><div class="controls"><button class="btn btn-primary" onclick="submit">Submit</button></div></div>
+        <div class="control-group"><div class="controls">
+            <button class="btn btn-primary" onclick="submit">Submit</button>
+        </div></div>
       </form>
     {% endfor %}
   </div>

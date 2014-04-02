@@ -10,7 +10,7 @@ form label+.controls
 	margin-left: 20px;
 }
 
-form .btn
+form .btn:first-child
 {
 	margin-left: 30%;
 }
