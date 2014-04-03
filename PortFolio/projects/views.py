@@ -29,7 +29,11 @@ def show_project(request, project_url):
     if request.user.is_authenticated():
         project_form = ProjectForm(instance=project)
         empty_download_form = DownloadForm()
-        empty_forms = {"rawtext": RawTextDescriptionForm(), "htmlcode": HtmlCodeDescriptionForm(), "image": ImageDescriptionForm()}
+        empty_forms = {
+                "rawtext": {"name": "Raw Text", "form": RawTextDescriptionForm()},
+                "htmlcode": {"name": "HTML Code", "form": HtmlCodeDescriptionForm()},
+                "image": {"name": "Image", "form": ImageDescriptionForm()},
+        }
         return render_to_response('project.html', {"project": project, "project_form": project_form, "empty_download_form": empty_download_form, "empty_forms": empty_forms}, context_instance=RequestContext(request))
     else:
         return render_to_response('project.html', {"project": project}, context_instance=RequestContext(request))

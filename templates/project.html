@@ -69,15 +69,15 @@
   {% if request.user.is_authenticated %}
   <div class="editable">
     <div class="add-description">
-      <div id="rawtext"><h3>Raw Text</h3><p></p></div>
-      <div id="image"><h3>Image</h3><p></p></div>
-      <div id="htmlcode"><h3>Html Code</h3><p></p></div>
+      {% for name, form_details in empty_forms.items %}
+        <div id="{{ name }}"><h3>{{ form_details.name }}</h3><p></p></div>
+      {% endfor %}
     </div>
-    {% for name, form in empty_forms.items %}
+    {% for name, form_details in empty_forms.items %}
       <form method="post" enctype="multipart/form-data" class="form-horizontal form-for" action="{% url projects.views.add_description_to project.pk name %}" id="form-for-{{ name }}">
       {% csrf_token %}
         <i class="glyphicon glyphicon-remove form-close"></i>
-        {{ form|as_bootstrap }}
+        {{ form_details.form|as_bootstrap }}
         <div class="control-group"><div class="controls">
             <button class="btn btn-primary" onclick="submit">Submit</button>
         </div></div>
