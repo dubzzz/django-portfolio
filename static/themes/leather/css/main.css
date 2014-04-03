@@ -110,6 +110,20 @@
 	overflow: visible;
 }
 
+.content .details .postit.private:after
+{
+	content: '';
+	position: absolute;
+
+	background-image: url('../img/cachet-cire-hidden.png');
+	background-repeat: no-repeat;
+	width: 57px;
+	height: 58px;
+
+	top: -22px;
+	left: 75px;
+}
+
 .content .details .postit:after
 {
 	content: '';

@@ -22,11 +22,12 @@ def home(request):
     if request.user.is_authenticated():
         return render_to_response('home.html', {"projects": Project.objects.all().order_by("-year"), "empty_project_form": ProjectForm()}, context_instance=RequestContext(request))
     else:    
-        return render_to_response('home.html', {"projects": Project.objects.all().order_by("-year")}, context_instance=RequestContext(request))
+        return render_to_response('home.html', {"projects": Project.objects.filter(private=False).order_by("-year")}, context_instance=RequestContext(request))
 
 def show_project(request, project_url):
-    project = get_object_or_404(Project, name_url=project_url)
     if request.user.is_authenticated():
+        project = get_object_or_404(Project, name_url=project_url)
+        
         project_form = ProjectForm(instance=project)
         empty_download_form = DownloadForm()
         empty_forms = {
@@ -36,6 +37,7 @@ def show_project(request, project_url):
         }
         return render_to_response('project.html', {"project": project, "project_form": project_form, "empty_download_form": empty_download_form, "empty_forms": empty_forms}, context_instance=RequestContext(request))
     else:
+        project = get_object_or_404(Project, name_url=project_url, private=False)
         return render_to_response('project.html', {"project": project}, context_instance=RequestContext(request))
 
 def logout(request):

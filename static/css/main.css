@@ -196,7 +196,7 @@ a:active
 	padding-left: 1em;
 }
 
-.content p.short-description:first-letter, .content p.category:first-letter
+.content p.visibility:first-letter, .content p.short-description:first-letter, .content p.category:first-letter
 {
 	padding-left: 0px;
 }
@@ -204,6 +204,11 @@ a:active
 p
 {
 	text-align: justify;
+}
+
+p.visibility:before
+{
+	content: 'Visibility: ';
 }
 
 p.short-description:before
@@ -225,7 +230,7 @@ ul.technology
 	margin-bottom: 50px;
 }
 
-p.short-description:before, p.category:before, ul.technology:before
+p.visibility:before, p.short-description:before, p.category:before, ul.technology:before
 {
 	font-weight: bold;
 	font-style: normal;

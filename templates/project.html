@@ -20,6 +20,7 @@
         <i class="glyphicon glyphicon-pencil form-edit"></i>
   {% endif %}
   
+  {% if request.user.is_authenticated %}<p class="visibility">{% if project.private %}Private{% else %}Public{% endif %}</p>{% endif %}
   <p class="short-description">{{ project.short_description }}</p>
   <p class="category">{{ project.category.name }}</p>
   <ul class="technology">

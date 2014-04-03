@@ -35,6 +35,8 @@ class Project(models.Model):
     short_description = models.CharField(max_length=155, help_text=_("Short description (max. 155)"))
     year = models.IntegerField(help_text=_("Release date"))
     
+    private = models.BooleanField(default=True, help_text=_("Private => visible only if logged in"))
+    
     category = models.ForeignKey(Category, help_text=_("Category"))
     technologies = models.ManyToManyField(Technology, help_text=_("Technologies"))
     

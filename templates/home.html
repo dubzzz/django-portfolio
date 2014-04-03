@@ -20,7 +20,7 @@
       {% for project in year_projects.list %}
         <div class="postit-wrapper">
           <a href="{% url projects.views.show_project project.name_url %}">
-            <div class="postit">
+            <div class="postit {% if project.private %}private{% endif %}">
               <h3>{{ project.name }}</h3>
               <p>{{ project.short_description }}</p>
             </div>
