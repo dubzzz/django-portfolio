@@ -131,8 +131,9 @@ class Description(InheritanceCastModel):
 
 class RawTextDescription(Description):
     description = models.TextField(help_text=_("Description - Raw Text"))
+    description_html = models.TextField(help_text=_("HTML code automatically generated"))
 
-    def get_safe_html(self, parent=None):
+    def rawtext_to_html(self):
         """
         This templatetag converts every url in text to an hyperlink.
         The text is escaped for HTML before adding hyperlinks.
@@ -175,8 +176,7 @@ class RawTextDescription(Description):
             <p>This text is <i>italic</i> and this one <b>bold</b>.</p>
         """
         
-        if not parent:
-            parent = super(RawTextDescription, self)
+        parent = super(RawTextDescription, self)
 
         escaped_text = escape(self.description)
 
@@ -206,6 +206,26 @@ class RawTextDescription(Description):
         escaped_text = re.sub(r'\*(?P<text>[^(\*\<\n)]+)\*', '<i>\g<text></i>', escaped_text)
         
         return escaped_text
+
+    def save(self, *args, **kwargs):
+        """
+        Redefinite .save() method of RawTextDescription
+        Automatically generates description_html when saving an object
+        """
+
+        self.description_html = self.rawtext_to_html()
+        super(Description, self).save(*args, **kwargs)
+    
+    def get_safe_html(self, parent=None):
+        """
+        Return the HTML description
+        if not generated (possible with older versions) generate it and save it
+        """
+        
+        if self.description and not self.description_html:
+            self.save() # save will call rawtext_to_html
+
+        return self.description_html
 
 class HtmlCodeDescription(Description):
     description = models.TextField(help_text=_("Description - Html Code"))
