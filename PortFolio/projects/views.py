@@ -15,9 +15,6 @@ from django.utils.datastructures import MultiValueDictKeyError
 from projects.forms import *
 from projects.models import *
 
-def log(text):
-    print >>sys.stderr, text
-
 def home(request):
     if request.user.is_authenticated():
         return render_to_response('home.html', {"projects": Project.objects.all().order_by("-year"), "empty_project_form": ProjectForm()}, context_instance=RequestContext(request))
@@ -65,6 +62,7 @@ def add_project(request):
         # Check form validity
         if form.is_valid():
             project = form.save()
+            project.update_technologies()
     
     if project:
         return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
@@ -85,7 +83,8 @@ def update_project(request, project_id):
         
         # Check form validity
         if form.is_valid():
-            form.save()
+            p = form.save()
+            p.update_technologies()
 
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 

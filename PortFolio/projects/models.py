@@ -6,6 +6,7 @@
 
 import os
 import re
+import sys
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.utils.html import escape
@@ -14,6 +15,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+
+def log(text):
+    print >>sys.stderr, text
 
 class Category(models.Model): #eg.: Security/Game/Network..
     name = models.CharField(max_length=50, help_text=_("Category name"))
@@ -25,6 +29,8 @@ class Category(models.Model): #eg.: Security/Game/Network..
 class Technology(models.Model): #eg.: C/SDL/Java..
     name = models.CharField(max_length=50, help_text=_("Technology name"))
     name_url = models.CharField(max_length=20, help_text=_("Technology name (URL)"))
+    
+    parent_technology = models.ForeignKey('self', blank=True, null=True, help_text=_("eg. Python is a parent technology for Django"))
     
     def __unicode__(self):
         return self.name
@@ -40,6 +46,28 @@ class Project(models.Model):
     category = models.ForeignKey(Category, help_text=_("Category"))
     technologies = models.ManyToManyField(Technology, help_text=_("Technologies"))
     
+    def update_technologies(self):
+        """
+        Add missing Technology to the M2M relation
+        eg. Django => Python
+        
+        Initially I tried to do it by overloading .save() method of Project
+        I also tried to put signals listeners on .pre_save and .post_save()
+        None of these technics worked
+        """
+
+        update_required = False
+
+        technos = list(self.technologies.all())
+        for techno in technos:
+            if techno.parent_technology and techno.parent_technology not in technos:
+                technos.append(techno.parent_technology)
+                self.technologies.add(techno.parent_technology)
+                update_required = True
+
+        if update_required:
+            self.save()
+
     def __unicode__(self):
         return self.name
 
