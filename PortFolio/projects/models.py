@@ -167,6 +167,15 @@ class RawTextDescription(Description):
         OUTPUT:
             <p>This is a list:</p><ul><li>element 1</li><li>element 2</li></ul>
         
+        INPUT:
+            This is a list:
+            + 1
+            + + 1.1
+            + + 1.2
+            + 2
+        Output:
+            <p>This is a list:</p><ul><li>1<ul><li>1.1</li><li>1.2</li></ul></li><li>2</li></ul>
+
         Italic/Bold
         -----------
 
@@ -188,8 +197,33 @@ class RawTextDescription(Description):
         
         # Bulletpoints to list
         
+        before = escaped_text
         escaped_text = re.sub(r'\n\+\s(?P<li_element>[^\n]+)', '</p><ul><li>\g<li_element></li></ul><p>', escaped_text).replace('</ul><p></p><ul>', '')
         
+        # Other levels for bulletpoints
+        while before != escaped_text:
+            before = escaped_text
+
+            # pattern: <li>+ xxxxxxxxx</li>
+            # < cannot be find in the original text (escaped)
+            escaped_text = re.sub(r'<li>\+\s(?P<li_element>[^<]+)</li>', '<ul><li>\g<li_element></li></ul>', escaped_text).replace('</ul><ul>', '')
+            
+            # This part computes the corresponding valid syntax for nested lists
+            # the current value of escaped_text should already be fine for most of the browsers
+
+            # We will get something like:
+            # <ul><li>1</li><ul><li>1.1</li></ul></ul>
+            # instead of:
+            # <ul><li>1<ul><li>1.1</li></ul></li></ul>
+            escaped_text = re.sub(r'</li><ul>(?P<li_elements>.+)</ul>', '<ul>\g<li_elements></ul></li>', escaped_text)
+            # or:
+            # <ul><ul><li>1.1</li></ul></ul>
+            # instead of:
+            # <ul><li><ul><li>1.1</li></ul></li></ul>
+            escaped_text = re.sub(r'<ul><ul>(?P<li_elements>.+)</ul>', '<ul><li><ul>\g<li_elements></ul></li>', escaped_text)
+
+        del before
+
         if escaped_text.endswith("<p>"):
             escaped_text = escaped_text[:-3]
         else:
