@@ -191,6 +191,45 @@ a:active
 	text-decoration: none;
 } /* selected link */
 
+.content .stats
+{
+	text-align: center;
+}
+
+.content .stats .stats-details
+{
+	display: inline-block;
+	width: 125px;
+
+	border-radius: 10px;
+	background-color: #ffffff;
+
+	padding: 5px;
+}
+
+.content .stats .stats-details p
+{
+	text-align: center;
+	margin: 0px;
+}
+
+.content .stats .stats-details .techno
+{
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.content .stats .stats-details .techno-num
+{
+	font-size: 4em;
+	margin-top: 10px;
+}
+
+.content .stats .stats-details .techno-num-type
+{
+	margin-bottom: 20px;
+}
+
 .content > p:first-letter, .description-editable > p:first-letter, .more-content > p:first-letter
 {
 	padding-left: 1em;

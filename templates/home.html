@@ -11,7 +11,17 @@
 
 {% block content %}
   {% include "home_content.html" %}
-
+  
+  <div class="stats">
+    {% for techno in stats %}
+      <div class="stats-details">
+        <p class="techno">{{ techno }}</p>
+        <p class="techno-num">{{ techno.num_projects }}</p>
+        <p class="techno-num-type">projects</p>
+      </div>
+    {% endfor %}
+  </div>
+  
   {% regroup projects by year as by_year_list %}
 
   {% for year_projects in by_year_list %}

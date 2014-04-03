@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -16,10 +16,11 @@ from projects.forms import *
 from projects.models import *
 
 def home(request):
+    stats = Technology.objects.filter(parent_technology__isnull=True).annotate(num_projects=Count('project')).order_by('-num_projects')[:3]
     if request.user.is_authenticated():
-        return render_to_response('home.html', {"projects": Project.objects.all().order_by("-year"), "empty_project_form": ProjectForm()}, context_instance=RequestContext(request))
+        return render_to_response('home.html', {"stats": stats, "projects": Project.objects.all().order_by("-year"), "empty_project_form": ProjectForm()}, context_instance=RequestContext(request))
     else:    
-        return render_to_response('home.html', {"projects": Project.objects.filter(private=False).order_by("-year")}, context_instance=RequestContext(request))
+        return render_to_response('home.html', {"stats": stats, "projects": Project.objects.filter(private=False).order_by("-year")}, context_instance=RequestContext(request))
 
 def show_project(request, project_url):
     if request.user.is_authenticated():
