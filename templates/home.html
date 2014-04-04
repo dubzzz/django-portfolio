@@ -4,6 +4,7 @@
 {% block page_title %}PortFolio{% endblock %}
 {% block title %}PortFolio{% endblock %}
 {% block page_description %}Nicolas Dubien's career portfolio describes and gives details concerning some of my major programing projects{% endblock %}
+{% block additional_js %}<script src='/static/js/counter.js'></script>{% endblock %}
 
 {% block breadcrumb %}
 	<li class="active">Home</li>
@@ -16,11 +17,13 @@
     {% for techno in stats %}
       <div class="stats-details">
         <p class="techno">{{ techno }}</p>
-        <p class="techno-num">{{ techno.num_projects }}</p>
+        <p class="techno-num" data-counter="{{ techno.num_projects }}">0</p>
         <p class="techno-num-type">projects</p>
       </div>
     {% endfor %}
+    <script type="text/javascript">run_counters();</script>
   </div>
+  <p class="legend">My {{ stats|length }} main programming languages</p>
   
   {% regroup projects by year as by_year_list %}
 

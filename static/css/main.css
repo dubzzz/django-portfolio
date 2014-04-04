@@ -317,11 +317,12 @@ p.image .legend:before, p.video .legend:before
 	content: 'Figure ' counter(legend) ' - ';
 }
 
-p.image .legend, p.video .legend
+.legend
 {
 	text-color: #555555;
 	font-style: italic;
 	font-size: 0.8em;
+	text-align: center;
 }
 
 ul.downloads
