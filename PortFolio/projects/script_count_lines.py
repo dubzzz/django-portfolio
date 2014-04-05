@@ -40,7 +40,7 @@ except SourceCode.DoesNotExist, e:
     print e
     sys.exit(4)
 
-# Untar the file
+# Untar/Unzip the file
 
 # Media directory
 media_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../media/")
@@ -54,7 +54,10 @@ if not os.path.exists(dir_path):
 os.chdir(dir_path)
 
 # Untar the tar.gz file
-untar_process = subprocess.Popen(['tar', 'zxf', os.path.join(media_path, sourcecode.archive.name)])
+if sourcecode.archive.name.endswith(".tar.gz"):
+    untar_process = subprocess.Popen(['tar', 'zxf', os.path.join(media_path, sourcecode.archive.name)])
+elif sourcecode.archive.name.endswith(".zip"):
+    untar_process = subprocess.Popen(['unzip', os.path.join(media_path, sourcecode.archive.name), '-d', dir_path])
 untar_process.wait()
 
 # Count #lines for each Technology

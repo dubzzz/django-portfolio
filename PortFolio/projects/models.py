@@ -101,15 +101,18 @@ def pre_delete_download(sender, instance, using, **kwargs):
 
 class SourceCode(models.Model):
     """
-    Source Code objects store the source code of a given project (tar.gz file extension)
+    Source Code objects store the source code of a given project (tar.gz/zip file extension)
     Its content should be accessible only by authentificated people
     """
 
     def upload_path(self, filename):
+        if filename.endswith(".zip"):    
+            return os.path.join('sourcecode', str(self.project.id), '%s_%d.zip' % (filename[:-4], self.project.sourcecode_set.count()))
+        
         return os.path.join('sourcecode', str(self.project.id), '%s_%d.tar.gz' % (filename[:-7], self.project.sourcecode_set.count()))
     
     project = models.ForeignKey(Project, help_text=_("Linked to the project"))
-    archive = CustomFileField(upload_to=upload_path, file_extensions=["tar.gz"], help_text=_("Source Code (*.tar.gz) of your project"))
+    archive = CustomFileField(upload_to=upload_path, file_extensions=["tar.gz", "zip"], help_text=_("Source Code (*.tar.gz/*.zip) of your project"))
     upload_time = models.DateTimeField(auto_now_add=True)
     exclude_paths = models.TextField(blank=True, null=True, help_text=_("Paths to exclude, one per line (eg.: */static/bootstrap/*)"))
 
