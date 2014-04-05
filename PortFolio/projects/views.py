@@ -2,6 +2,7 @@
 
 import os
 import sys
+import subprocess
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
@@ -28,12 +29,13 @@ def show_project(request, project_url):
         
         project_form = ProjectForm(instance=project)
         empty_download_form = DownloadForm()
+        empty_sourcecode_form = SourceCodeForm()
         empty_forms = {
                 "rawtext": {"name": "Raw Text", "form": RawTextDescriptionForm()},
                 "htmlcode": {"name": "HTML Code", "form": HtmlCodeDescriptionForm()},
                 "image": {"name": "Image", "form": ImageDescriptionForm()},
         }
-        return render_to_response('project.html', {"project": project, "project_form": project_form, "empty_download_form": empty_download_form, "empty_forms": empty_forms}, context_instance=RequestContext(request))
+        return render_to_response('project.html', {"project": project, "project_form": project_form, "empty_download_form": empty_download_form, "empty_sourcecode_form": empty_sourcecode_form, "empty_forms": empty_forms}, context_instance=RequestContext(request))
     else:
         project = get_object_or_404(Project, name_url=project_url, private=False)
         return render_to_response('project.html', {"project": project}, context_instance=RequestContext(request))
@@ -279,5 +281,27 @@ def delete_download(request, download_id):
     
     down.delete() # pre_delete is automatically called to delete files (if required)
 
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+
+@login_required
+def add_sourcecode_to(request, project_id):
+    """
+    Add sourcecode to a project
+    """
+    
+    project = get_object_or_404(Project, pk=project_id)
+    
+    # Check that the request has been transmitted in POST
+    if request.method == 'POST':
+        form = SourceCodeForm(request.POST, request.FILES)
+        # Check form validity
+        if form.is_valid():
+            sc = form.save(commit=False)
+            sc.project = project
+            sc.save()
+            
+            # Execute counting-lines operation
+            subprocess.Popen([os.path.join(os.getcwd(), "PortFolio/projects/script_count_lines.py"), str(sc.pk)])
+    
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 

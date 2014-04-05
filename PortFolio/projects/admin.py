@@ -5,6 +5,7 @@ from projects.models import *
 admin.site.register(Category)
 admin.site.register(Technology)
 admin.site.register(Download)
+admin.site.register(SourceCode)
 
 class RawTextDescriptionInline(admin.StackedInline):
     model = RawTextDescription

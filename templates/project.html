@@ -114,6 +114,29 @@
     {% endif %}
     </ul>
   {% endif %}
+  
+  {% if request.user.is_authenticated %}
+    <ul class="downloads" style="margin-top: 20px;">
+      {% for sc in project.sourcecode_set.all %}
+        <li>
+          <a href="/media/{{ sc.archive }}" target="blank_">{{ sc.archive }}</a>
+          - uploaded {{ sc.upload_time }}
+          <ul>{% for line in sc.sourcetotechnolines_set.all %}<li>{{ line }}</li>{% endfor %}</ul>
+        </li>
+      {% endfor %}
+      <li class="editable">
+        <span class="description-editable"><a href="javascript:void(0);" class="form-edit"><i class="glyphicon glyphicon-plus"></i> Add sourcecode</a></span>
+        <form method="post" enctype="multipart/form-data" class="form-horizontal" action="{% url projects.views.add_sourcecode_to project.pk %}">
+        {% csrf_token %}
+          <i class="glyphicon glyphicon-remove form-close"></i>
+          {{ empty_sourcecode_form|as_bootstrap }}
+          <div class="control-group"><div class="controls">
+              <button class="btn btn-primary" onclick="submit">Submit</button>
+          </div></div>
+        </form>
+      </li>
+    </ul>
+  {% endif %}
 
   {% if request.user.is_authenticated %}
     <script type="text/javascript">

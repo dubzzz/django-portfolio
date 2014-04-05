@@ -16,6 +16,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 
+from projects.CustomFileField import CustomFileField
+
 def log(text):
     print >>sys.stderr, text
 
@@ -31,7 +33,8 @@ class Technology(models.Model): #eg.: C/SDL/Java..
     name_url = models.CharField(max_length=20, help_text=_("Technology name (URL)"))
     
     parent_technology = models.ForeignKey('self', blank=True, null=True, help_text=_("eg. Python is a parent technology for Django"))
-    
+    file_extensions = models.CharField(max_length=50, blank=True, null=True, help_text=_("Possible file extensions (eg. 'txt') separated by '|' (eg. 'js|css')"))
+
     def __unicode__(self):
         return self.name
 
@@ -95,6 +98,39 @@ class Download(models.Model):
 def pre_delete_download(sender, instance, using, **kwargs):
     if os.path.isfile(instance.down.path):
         os.remove(instance.down.path)
+
+class SourceCode(models.Model):
+    """
+    Source Code objects store the source code of a given project (tar.gz file extension)
+    Its content should be accessible only by authentificated people
+    """
+
+    def upload_path(self, filename):
+        return os.path.join('sourcecode', str(self.project.id), '%s_%d.tar.gz' % (filename[:-7], self.project.sourcecode_set.count()))
+    
+    project = models.ForeignKey(Project, help_text=_("Linked to the project"))
+    archive = CustomFileField(upload_to=upload_path, file_extensions=["tar.gz"], help_text=_("Source Code (*.tar.gz) of your project"))
+    upload_time = models.DateTimeField(auto_now_add=True)
+    exclude_paths = models.TextField(blank=True, null=True, help_text=_("Paths to exclude, one per line (eg.: */static/bootstrap/*)"))
+
+    def __unicode__(self):
+        return self.archive.name
+
+class SourceToTechnoLines(models.Model):
+    """
+    Number of lines for a given (SourceCode, Technology) pair
+    """
+    
+    sourcecode = models.ForeignKey(SourceCode, help_text=_("Source code described"))
+    technology = models.ForeignKey(Technology, help_text=_("Technology concerned"))
+    num_lines = models.IntegerField(help_text=_("Number of lines of a given technology in a source code"))
+    
+    def __unicode__(self):
+        return "%d lines of %s" % (self.num_lines, self.technology.name)
+    
+    class Meta:
+        # A given pair cannot have several values for num_lines
+        unique_together = ("sourcecode", "technology")
 
 class InheritanceCastModel(models.Model):
     """
