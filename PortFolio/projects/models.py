@@ -116,6 +116,9 @@ class SourceCode(models.Model):
     def __unicode__(self):
         return self.archive.name
 
+    class Meta:
+        ordering = ["-upload_time",]
+
 class SourceToTechnoLines(models.Model):
     """
     Number of lines for a given (SourceCode, Technology) pair

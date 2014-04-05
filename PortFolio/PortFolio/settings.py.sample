@@ -20,6 +20,7 @@ FOOTER_QUICKLINKS = (
 )
 
 THEME = 'school' # also: 'leather'
+STATS = 'num_projects' # also: 'num_lines'
 
 # DEFAULT SETTINGS
 

@@ -8,5 +8,6 @@ def my_context_processor(request):
             "FOOTER_TEXT": settings.FOOTER_TEXT,
             "FOOTER_QUICKLINKS": settings.FOOTER_QUICKLINKS,
             "THEME": settings.THEME,
+            "STATS": settings.STATS,
            }
 

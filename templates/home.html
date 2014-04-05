@@ -12,19 +12,21 @@
 
 {% block content %}
   {% include "home_content.html" %}
-  
+   
+  {% if STATS %}
   <div class="stats">
     {% for techno in stats %}
       <div class="stats-details">
         <p class="techno">{{ techno }}</p>
-        <p class="techno-num" data-counter="{{ techno.num_projects }}">0</p>
-        <p class="techno-num-type">projects</p>
+        <p class="techno-num" data-counter="{{ techno.num }}">0</p>
+        <p class="techno-num-type">{% if STATS == "num_projects" %}projects{% elif STATS == "num_lines" %}lines{% endif %}</p>
       </div>
     {% endfor %}
     <script type="text/javascript">run_counters();</script>
   </div>
   <p class="legend">My {{ stats|length }} main programming languages</p>
-  
+  {% endif %}
+
   {% regroup projects by year as by_year_list %}
 
   {% for year_projects in by_year_list %}

@@ -12,12 +12,53 @@ from django.db.models import Q, Count
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
+from django.conf import settings
 
 from projects.forms import *
 from projects.models import *
 
 def home(request):
-    stats = Technology.objects.filter(parent_technology__isnull=True).annotate(num_projects=Count('project')).order_by('-num_projects')[:3]
+    if settings.STATS == "num_lines":
+        sql_num_lines_per_techno = """
+SELECT
+	t.id,
+	t.name,
+    t.name_url,
+	s2t_lines.num_lines AS num
+FROM
+	(
+		SELECT
+			s2t.technology_id AS id,
+			SUM(s2t.num_lines) AS num_lines
+		FROM projects_sourcetotechnolines AS s2t
+		INNER JOIN
+			(
+				SELECT
+					id,
+					project_id
+				FROM
+					(
+						SELECT id, project_id
+						FROM projects_sourcecode
+						ORDER BY projects_sourcecode.upload_time DESC
+					) AS sc
+				GROUP BY sc.project_id
+			) AS last_sourcecodes
+		ON
+			s2t.sourcecode_id = last_sourcecodes.id
+		GROUP BY s2t.technology_id
+		ORDER BY num_lines
+	) AS s2t_lines
+LEFT JOIN projects_technology AS t
+ON
+	s2t_lines.id = t.id
+ORDER BY num_lines DESC
+LIMIT 3;
+"""
+        stats = Technology.objects.raw(sql_num_lines_per_techno)
+    elif settings.STATS == "num_projects":
+        stats = Technology.objects.filter(parent_technology__isnull=True).annotate(num=Count('project')).order_by('-num')[:3]
+    
     if request.user.is_authenticated():
         return render_to_response('home.html', {"stats": stats, "projects": Project.objects.all().order_by("-year"), "empty_project_form": ProjectForm()}, context_instance=RequestContext(request))
     else:    
