@@ -57,7 +57,7 @@ os.chdir(dir_path)
 if sourcecode.archive.name.endswith(".tar.gz"):
     untar_process = subprocess.Popen(['tar', 'zxf', os.path.join(media_path, sourcecode.archive.name)])
 elif sourcecode.archive.name.endswith(".zip"):
-    untar_process = subprocess.Popen(['unzip', os.path.join(media_path, sourcecode.archive.name), '-d', dir_path])
+    untar_process = subprocess.Popen(['unzip', '-u', os.path.join(media_path, sourcecode.archive.name), '-d', dir_path])
 untar_process.wait()
 
 # Count #lines for each Technology
@@ -75,7 +75,7 @@ for techno in technologies_to_analyse:
     # find /home/django-portfolio/ -type f \( -regextype posix-extended -regex ".*\.(js|css)" -not -path "*/exclude/*" \)
  
     cmd_find = ["find", ".", "-type", "f", "(", "-regextype", "posix-extended", "-regex", ".*\.(%s)" % techno.file_extensions]
-    exclude_paths_list = sourcecode.exclude_paths.split('\n')
+    exclude_paths_list = sourcecode.exclude_paths.split('\r\n')
     for exclude_path in exclude_paths_list:
         if len(exclude_path) > 0:
             cmd_find += ["-not", "-path", exclude_path]
