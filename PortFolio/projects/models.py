@@ -115,6 +115,7 @@ class SourceCode(models.Model):
     archive = CustomFileField(upload_to=upload_path, file_extensions=["tar.gz", "zip"], help_text=_("Source Code (*.tar.gz/*.zip) of your project"))
     upload_time = models.DateTimeField(auto_now_add=True)
     exclude_paths = models.TextField(blank=True, null=True, help_text=_("Paths to exclude, one per line (eg.: */static/bootstrap/*)"))
+    lines_ready = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.archive.name

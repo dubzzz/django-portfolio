@@ -5,7 +5,11 @@
 {% block page_title %}{{ project.name }} - PortFolio{% endblock %}
 {% block title %}Project: {{ project.name }}{% endblock %}
 {% block page_description %}{{ project.short_description }}{% endblock %}
-{% block additional_js %}<script src='/static/js/clear-selection.js'></script>{% endblock %}
+
+{% block additional_js %}
+  <script src='/static/js/clear-selection.js'></script>
+  <script src='/static/js/ajax_sourcecode_lines.js'></script>
+{% endblock %}
 
 {% block breadcrumb %}
   <li><a href="{% url projects.views.home %}">Home</a></li>
@@ -121,7 +125,13 @@
         <li>
           <a href="/media/{{ sc.archive }}" target="blank_">{{ sc.archive }}</a>
           - uploaded {{ sc.upload_time }}
-          <ul>{% for line in sc.sourcetotechnolines_set.all %}<li>{{ line }}</li>{% endfor %}</ul>
+          <ul id="sourcecode-lines-{{ sc.pk }}">
+            {% if sc.lines_ready %}
+              {% for line in sc.sourcetotechnolines_set.all %}<li>{{ line }}</li>{% endfor %}
+            {% else %}
+              <script type="text/javascript"> ajax_sourcecode_lines("sourcecode-lines-{{ sc.pk }}", "{% url projects.views.get_sourcecode_lines sc.pk %}"); </script>
+            {% endif %}
+          </ul>
         </li>
       {% endfor %}
       <li class="editable">

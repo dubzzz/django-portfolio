@@ -10,6 +10,10 @@ def count_lines(sourcecode, rm_required=True):
     in a given source code
     """
     
+    if sourcecode.lines_ready:
+        sourcecode.lines_ready = False
+        sourcecode.save()
+
     # Untar/Unzip the file
 
     media_path = settings.MEDIA_ROOT
@@ -72,5 +76,7 @@ def count_lines(sourcecode, rm_required=True):
     if rm_required:
         del_process = subprocess.Popen(["rm", "-rf", dir_path])
         del_process.wait()
-
+    
+    sourcecode.lines_ready = True
+    sourcecode.save()
 

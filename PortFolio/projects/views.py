@@ -349,3 +349,11 @@ def add_sourcecode_to(request, project_id):
 
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 
+@login_required
+def get_sourcecode_lines(request, sourcecode_id):
+    """
+    Retrieve sourcecode's details
+    """
+    
+    return render_to_response('sourcecode_lines.xml', {"lines": SourceToTechnoLines.objects.filter(sourcecode__id=sourcecode_id, sourcecode__lines_ready=True)}, context_instance=RequestContext(request), mimetype="application/xml")
+
