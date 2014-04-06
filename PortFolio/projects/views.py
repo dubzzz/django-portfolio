@@ -2,7 +2,6 @@
 
 import os
 import sys
-import subprocess
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
@@ -14,8 +13,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils.datastructures import MultiValueDictKeyError
 from django.conf import settings
 
+from multiprocessing import Process
+
 from projects.forms import *
 from projects.models import *
+from script_count_lines import count_lines
 
 def home(request):
     if settings.STATS == "num_lines":
@@ -342,7 +344,8 @@ def add_sourcecode_to(request, project_id):
             sc.save()
             
             # Execute counting-lines operation
-            subprocess.Popen([os.path.join(os.getcwd(), "PortFolio/projects/script_count_lines.py"), str(sc.pk)])
-    
+            p = Process(target=count_lines, args=(sc, True,))
+            p.start()
+
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 
