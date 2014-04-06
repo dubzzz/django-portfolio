@@ -40,7 +40,7 @@ class Technology(models.Model): #eg.: C/SDL/Java..
 
 class Project(models.Model):
     name = models.CharField(max_length=50, help_text=_("Project name"))
-    name_url = models.CharField(max_length=20, help_text=_("Project name (URL)"))
+    name_url = models.CharField(max_length=20, unique=True, help_text=_("Project name (URL)"))
     short_description = models.CharField(max_length=155, help_text=_("Short description (max. 155)"))
     year = models.IntegerField(help_text=_("Release date"))
     
