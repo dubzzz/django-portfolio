@@ -13,7 +13,7 @@ function format_counter(counter_value_) {
 	}
 
 	if (counter_value >= 10 || counter_value_ < 10)
-		return parseInt(counter_value);
+		return parseInt(counter_value) + ext;
 	else	
 		return parseInt(counter_value) + '.' + (parseInt(counter_value * 10) %10) + ext;
 }
