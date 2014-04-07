@@ -18,7 +18,7 @@ body
 .header .social-network-letterpress
 {
 	position: relative;
-	display: inline-text;
+	display: inline-block;
 	float: right;
 	
 	width: 52px;
@@ -319,7 +319,7 @@ p.image .legend:before, p.video .legend:before
 
 .legend
 {
-	text-color: #555555;
+	color: #555555;
 	font-style: italic;
 	font-size: 0.8em;
 	text-align: center;
