@@ -255,7 +255,7 @@ class RawTextDescription(Description):
         INPUT:
             This text is *italic* and this one **bold**.
         OUTPUT:
-            <p>This text is <i>italic</i> and this one <b>bold</b>.</p>
+            <p>This text is <em>italic</em> and this one <strong>bold</strong>.</p>
         """
         
         parent = super(RawTextDescription, self)
@@ -309,8 +309,8 @@ class RawTextDescription(Description):
         
         # Italic/Bold
         
-        escaped_text = re.sub(r'\*\*(?P<text>[^(\*\<\n)]+)\*\*', '<b>\g<text></b>', escaped_text)
-        escaped_text = re.sub(r'\*(?P<text>[^(\*\<\n)]+)\*', '<i>\g<text></i>', escaped_text)
+        escaped_text = re.sub(r'\*\*(?P<text>[^(\*\<\n)]+)\*\*', '<strong>\g<text></strong>', escaped_text)
+        escaped_text = re.sub(r'\*(?P<text>[^(\*\<\n)]+)\*', '<em>\g<text></em>', escaped_text)
         
         return escaped_text
 

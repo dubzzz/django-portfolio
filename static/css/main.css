@@ -3,6 +3,18 @@ body
 	counter-reset: legend;
 }
 
+strong /*b*/
+{
+	font-weight: bold;
+	font-style: normal;
+}
+
+em /*i*/
+{
+	font-weight: normal;
+	font-style: italic;
+}
+
 /* HEADER */
 
 .header
