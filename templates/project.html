@@ -135,7 +135,7 @@
             {% if code.lines_ready %}
               {% for line in code.sourcetotechnolines_set.all %}<li>{{ line }}</li>{% endfor %}
             {% else %}
-              <script type="text/javacodeript"> ajax_sourcecode_lines("sourcecode-lines-{{ code.pk }}", "{% url projects.views.get_sourcecode_lines code.pk %}"); </script>
+              <script type="text/javacodeript"> ajax_sourcecode_lines("sourcecode-lines-{{ code.pk }}", "{% url projects.views.get_code_lines code.pk %}"); </script>
             {% endif %}
           </ul>
         </li>
