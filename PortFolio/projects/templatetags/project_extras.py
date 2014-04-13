@@ -23,3 +23,7 @@ def get_form(description_object):
 
     return None
 
+@register.filter
+def cast_code(code_object):
+    return code_object.cast()
+

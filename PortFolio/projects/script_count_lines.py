@@ -2,7 +2,7 @@ import os, sys
 import subprocess
 
 from django.conf import settings
-from projects.models import SourceCode, SourceToTechnoLines, Technology
+from projects.models import Code, SourceCode, SourceToTechnoLines, Technology
 
 def count_lines(sourcecode, rm_required=True):
     """
@@ -34,10 +34,10 @@ def count_lines(sourcecode, rm_required=True):
     untar_process.wait()
 
     # Count #lines for each Technology
-
+    
     # Delete everything that was already computed for that SourceCode
-    SourceToTechnoLines.objects.filter(sourcecode=sourcecode).delete()
-
+    SourceToTechnoLines.objects.filter(code=sourcecode.pk).delete()
+    
     # Technology by Technology
     technologies_to_analyse = Technology.objects.filter(parent_technology__isnull=True)
     for techno in technologies_to_analyse:
@@ -53,7 +53,7 @@ def count_lines(sourcecode, rm_required=True):
             if len(exclude_path) > 0:
                 cmd_find += ["-not", "-path", exclude_path]
         cmd_find += [")", "-exec", "cat", "{}", ";"]
-
+        
         ps_code_lines = subprocess.Popen(cmd_find, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         ps_relevant_code_lines = subprocess.Popen(["grep", "-v", "^$"], stdin=ps_code_lines.stdout, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         ps_count_lines = subprocess.Popen(["wc", "-l"], stdin=ps_relevant_code_lines.stdout, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -65,7 +65,7 @@ def count_lines(sourcecode, rm_required=True):
             # run the process and retrive its output
             num_lines = int(ps_count_lines.communicate()[0])
             if num_lines > 0:
-                SourceToTechnoLines(sourcecode=sourcecode, technology=techno, num_lines=num_lines).save()
+                SourceToTechnoLines(code=Code.objects.get(id=sourcecode.pk), technology=techno, num_lines=num_lines).save()
         except ValueError:
             pass
         except TypeError:

@@ -121,15 +121,21 @@
   
   {% if request.user.is_authenticated %}
     <ul class="downloads" style="margin-top: 20px;">
-      {% for sc in project.sourcecode_set.all %}
+      {% for code in project.code_set.all %}
         <li>
-          <a href="/media/{{ sc.archive }}" target="blank_">{{ sc.archive }}</a>
-          - uploaded {{ sc.upload_time }}
-          <ul id="sourcecode-lines-{{ sc.pk }}">
-            {% if sc.lines_ready %}
-              {% for line in sc.sourcetotechnolines_set.all %}<li>{{ line }}</li>{% endfor %}
+          {% with code|cast_code as sc %}
+            {% if sc.archive %}{# SourceCode #}
+              <a href="/media/{{ sc.archive }}" target="blank_">{{ sc.archive }}</a>
+            {% elif sc.url %}{# Repository #}
+              <a href="{{ sc.url }}" target="blank_">{{ sc.url }} [{{ sc.software }}]</a>
+            {% endif %}
+          {% endwith %}
+          - uploaded {{ code.upload_time }}
+          <ul id="sourcecode-lines-{{ code.pk }}">
+            {% if code.lines_ready %}
+              {% for line in code.sourcetotechnolines_set.all %}<li>{{ line }}</li>{% endfor %}
             {% else %}
-              <script type="text/javascript"> ajax_sourcecode_lines("sourcecode-lines-{{ sc.pk }}", "{% url projects.views.get_sourcecode_lines sc.pk %}"); </script>
+              <script type="text/javacodeript"> ajax_sourcecode_lines("sourcecode-lines-{{ code.pk }}", "{% url projects.views.get_sourcecode_lines code.pk %}"); </script>
             {% endif %}
           </ul>
         </li>

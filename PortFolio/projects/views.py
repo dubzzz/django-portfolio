@@ -17,7 +17,7 @@ from multiprocessing import Process
 
 from projects.forms import *
 from projects.models import *
-from script_count_lines import count_lines
+from projects.script_count_lines import count_lines
 
 def home(request):
     if settings.STATS == "num_lines":
@@ -41,13 +41,13 @@ FROM
 				FROM
 					(
 						SELECT id, project_id
-						FROM projects_sourcecode
-						ORDER BY projects_sourcecode.upload_time DESC
+						FROM projects_code
+						ORDER BY projects_code.upload_time DESC
 					) AS sc
 				GROUP BY sc.project_id
-			) AS last_sourcecodes
+			) AS last_codes
 		ON
-			s2t.sourcecode_id = last_sourcecodes.id
+			s2t.code_id = last_codes.id
 		GROUP BY s2t.technology_id
 		ORDER BY num_lines
 	) AS s2t_lines
@@ -350,10 +350,10 @@ def add_sourcecode_to(request, project_id):
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 
 @login_required
-def get_sourcecode_lines(request, sourcecode_id):
+def get_code_lines(request, code_id):
     """
-    Retrieve sourcecode's details
+    Retrieve code's details
     """
     
-    return render_to_response('sourcecode_lines.xml', {"lines": SourceToTechnoLines.objects.filter(sourcecode__id=sourcecode_id, sourcecode__lines_ready=True)}, context_instance=RequestContext(request), mimetype="application/xml")
+    return render_to_response('sourcecode_lines.xml', {"lines": SourceToTechnoLines.objects.filter(code__id=code_id, code__lines_ready=True)}, context_instance=RequestContext(request), mimetype="application/xml")
 

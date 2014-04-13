@@ -99,46 +99,6 @@ def pre_delete_download(sender, instance, using, **kwargs):
     if os.path.isfile(instance.down.path):
         os.remove(instance.down.path)
 
-class SourceCode(models.Model):
-    """
-    Source Code objects store the source code of a given project (tar.gz/zip file extension)
-    Its content should be accessible only by authentificated people
-    """
-
-    def upload_path(self, filename):
-        if filename.endswith(".zip"):    
-            return os.path.join('sourcecode', str(self.project.id), '%s_%d.zip' % (filename[:-4], self.project.sourcecode_set.count()))
-        
-        return os.path.join('sourcecode', str(self.project.id), '%s_%d.tar.gz' % (filename[:-7], self.project.sourcecode_set.count()))
-    
-    project = models.ForeignKey(Project, help_text=_("Linked to the project"))
-    archive = CustomFileField(upload_to=upload_path, file_extensions=["tar.gz", "zip"], help_text=_("Source Code (*.tar.gz/*.zip) of your project"))
-    upload_time = models.DateTimeField(auto_now_add=True)
-    exclude_paths = models.TextField(blank=True, null=True, help_text=_("Paths to exclude, one per line (eg.: */static/bootstrap/*)"))
-    lines_ready = models.BooleanField(default=False)
-
-    def __unicode__(self):
-        return self.archive.name
-
-    class Meta:
-        ordering = ["-upload_time",]
-
-class SourceToTechnoLines(models.Model):
-    """
-    Number of lines for a given (SourceCode, Technology) pair
-    """
-    
-    sourcecode = models.ForeignKey(SourceCode, help_text=_("Source code described"))
-    technology = models.ForeignKey(Technology, help_text=_("Technology concerned"))
-    num_lines = models.IntegerField(help_text=_("Number of lines of a given technology in a source code"))
-    
-    def __unicode__(self):
-        return "%d lines of %s" % (self.num_lines, self.technology.name)
-    
-    class Meta:
-        # A given pair cannot have several values for num_lines
-        unique_together = ("sourcecode", "technology")
-
 class InheritanceCastModel(models.Model):
     """
     An abstract base class that provides a ``real_type`` FK to ContentType.
@@ -161,6 +121,76 @@ class InheritanceCastModel(models.Model):
 
     class Meta:
         abstract = True
+
+class Code(InheritanceCastModel):
+    """
+    Code is the parent class of
+    + SourceCode
+    + Repository
+
+    Code is linked via SourceToTechnoLines to Technology
+    the aim of this link is to count the number of lines for a given project
+    """
+
+    project = models.ForeignKey(Project, help_text=_("Linked to the project"))
+    upload_time = models.DateTimeField(auto_now_add=True)
+    exclude_paths = models.TextField(blank=True, null=True, help_text=_("Paths to exclude, one per line (eg.: */static/bootstrap/*)"))
+    lines_ready = models.BooleanField(default=False)
+
+    # class Meta:
+    #     abstract = True
+    # not used for simplicity in relationships between table. More precise explanation is given on Description (class) bellow
+
+    class Meta:
+        ordering = ["-upload_time",]
+
+class SourceCode(Code):
+    """
+    Source Code objects store the source code of a given project (tar.gz/zip file extension)
+    Its content should be accessible only by authentificated people
+    """
+
+    def upload_path(self, filename):
+        if filename.endswith(".zip"):    
+            return os.path.join('sourcecode', str(self.project.id), '%s_%d.zip' % (filename[:-4], self.project.code_set.count()))
+        
+        return os.path.join('sourcecode', str(self.project.id), '%s_%d.tar.gz' % (filename[:-7], self.project.code_set.count()))
+    
+    archive = CustomFileField(upload_to=upload_path, file_extensions=["tar.gz", "zip"], help_text=_("Source Code (*.tar.gz/*.zip) of your project"))
+
+    def __unicode__(self):
+        return self.archive.name
+
+class Repository(Code):
+    """
+    Details concerning a repository
+    A cron task can then updates the number of lines automatically without having to update an archive (SourceCode)
+    """
+    
+    SOFT_CHOICES = (
+            ("git", "Git"),
+            ("hg", "Mercurial"),
+            ("zip", "ZIP-ball, TAR.GZ-ball"),
+    )
+
+    url = models.URLField(max_length=200, help_text=_("URL of the repository"))
+    software = models.CharField(max_length=3, choices=SOFT_CHOICES, help_text=_("Which distributed revision control tool?"))
+
+class SourceToTechnoLines(models.Model):
+    """
+    Number of lines for a given (Code, Technology) pair
+    """
+    
+    code = models.ForeignKey(Code, help_text=_("Code described"))
+    technology = models.ForeignKey(Technology, help_text=_("Technology concerned"))
+    num_lines = models.IntegerField(help_text=_("Number of lines of a given technology in a code"))
+    
+    def __unicode__(self):
+        return "%d lines of %s" % (self.num_lines, self.technology.name)
+    
+    class Meta:
+        # A given pair cannot have several values for num_lines
+        unique_together = ("code", "technology")
 
 class Description(InheritanceCastModel):
     project = models.ForeignKey(Project, help_text=_("Project"))
