@@ -10,6 +10,8 @@ def count_lines(sourcecode, rm_required=True):
     in a given source code
     """
     
+    code = Code.objects.get(id=sourcecode.pk)
+
     if sourcecode.lines_ready:
         sourcecode.lines_ready = False
         sourcecode.save()
@@ -36,7 +38,7 @@ def count_lines(sourcecode, rm_required=True):
     # Count #lines for each Technology
     
     # Delete everything that was already computed for that SourceCode
-    SourceToTechnoLines.objects.filter(code=sourcecode.pk).delete()
+    SourceToTechnoLines.objects.filter(code=code).delete()
     
     # Technology by Technology
     technologies_to_analyse = Technology.objects.filter(parent_technology__isnull=True)
@@ -65,7 +67,7 @@ def count_lines(sourcecode, rm_required=True):
             # run the process and retrive its output
             num_lines = int(ps_count_lines.communicate()[0])
             if num_lines > 0:
-                SourceToTechnoLines(code=Code.objects.get(id=sourcecode.pk), technology=techno, num_lines=num_lines).save()
+                SourceToTechnoLines(code=code, technology=techno, num_lines=num_lines).save()
         except ValueError:
             pass
         except TypeError:
