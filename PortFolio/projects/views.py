@@ -42,6 +42,7 @@ FROM
 					(
 						SELECT id, project_id
 						FROM projects_code
+                        WHERE lines_ready = TRUE
 						ORDER BY projects_code.upload_time DESC
 					) AS sc
 				GROUP BY sc.project_id

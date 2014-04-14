@@ -135,7 +135,7 @@ class Code(InheritanceCastModel):
     project = models.ForeignKey(Project, help_text=_("Linked to the project"))
     upload_time = models.DateTimeField(auto_now_add=True)
     exclude_paths = models.TextField(blank=True, null=True, help_text=_("Paths to exclude, one per line (eg.: */static/bootstrap/*)"))
-    lines_ready = models.BooleanField(default=False)
+    lines_ready = models.BooleanField(default=False, help_text=_("Lines ready == True => the lines of that instance have already been counted"))
 
     # class Meta:
     #     abstract = True

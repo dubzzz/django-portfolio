@@ -13,9 +13,8 @@ def count_lines(sourcecode, rm_required=True):
     code = Code.objects.get(id=sourcecode.pk)
 
     if sourcecode.lines_ready:
-        sourcecode.lines_ready = False
-        sourcecode.save()
-
+        return
+    
     # Untar/Unzip the file
 
     media_path = settings.MEDIA_ROOT
