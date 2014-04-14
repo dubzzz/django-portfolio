@@ -73,12 +73,13 @@ def show_project(request, project_url):
         project_form = ProjectForm(instance=project)
         empty_download_form = DownloadForm()
         empty_sourcecode_form = SourceCodeForm()
+        empty_repository_form = RepositoryForm()
         empty_forms = {
                 "rawtext": {"name": "Raw Text", "form": RawTextDescriptionForm()},
                 "htmlcode": {"name": "HTML Code", "form": HtmlCodeDescriptionForm()},
                 "image": {"name": "Image", "form": ImageDescriptionForm()},
         }
-        return render_to_response('project.html', {"project": project, "project_form": project_form, "empty_download_form": empty_download_form, "empty_sourcecode_form": empty_sourcecode_form, "empty_forms": empty_forms}, context_instance=RequestContext(request))
+        return render_to_response('project.html', {"project": project, "project_form": project_form, "empty_download_form": empty_download_form, "empty_sourcecode_form": empty_sourcecode_form, "empty_repository_form": empty_repository_form, "empty_forms": empty_forms}, context_instance=RequestContext(request))
     else:
         project = get_object_or_404(Project, name_url=project_url, private=False)
         return render_to_response('project.html', {"project": project}, context_instance=RequestContext(request))
@@ -347,6 +348,25 @@ def add_sourcecode_to(request, project_id):
             p = Process(target=count_lines, args=(sc, True,))
             p.start()
 
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+
+@login_required
+def add_repository_to(request, project_id):
+    """
+    Add repository to a project
+    """
+    
+    project = get_object_or_404(Project, pk=project_id)
+    
+    # Check that the request has been transmitted in POST
+    if request.method == 'POST':
+        form = RepositoryForm(request.POST, request.FILES)
+        # Check form validity
+        if form.is_valid():
+            sc = form.save(commit=False)
+            sc.project = project
+            sc.save()
+            
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 
 @login_required

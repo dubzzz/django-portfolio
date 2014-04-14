@@ -151,6 +151,17 @@
           </div></div>
         </form>
       </li>
+      <li class="editable">
+        <span class="description-editable"><a href="javascript:void(0);" class="form-edit"><i class="glyphicon glyphicon-plus"></i> Add repository</a></span>
+        <form method="post" enctype="multipart/form-data" class="form-horizontal" action="{% url projects.views.add_repository_to project.pk %}">
+        {% csrf_token %}
+          <i class="glyphicon glyphicon-remove form-close"></i>
+          {{ empty_repository_form|as_bootstrap }}
+          <div class="control-group"><div class="controls">
+              <button class="btn btn-primary" onclick="submit">Submit</button>
+          </div></div>
+        </form>
+      </li>
     </ul>
   {% endif %}
 

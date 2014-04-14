@@ -32,3 +32,8 @@ class SourceCodeForm(forms.ModelForm):
         model = SourceCode
         fields = ('archive', 'exclude_paths',)
 
+class RepositoryForm(forms.ModelForm):
+    class Meta:
+        model = Repository
+        fields = ('software', 'url', 'exclude_paths',)
+

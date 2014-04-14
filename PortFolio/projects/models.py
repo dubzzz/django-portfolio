@@ -176,6 +176,9 @@ class Repository(Code):
     url = models.URLField(max_length=200, help_text=_("URL of the repository"))
     software = models.CharField(max_length=3, choices=SOFT_CHOICES, help_text=_("Which distributed revision control tool?"))
 
+    def __unicode__(self):
+        return "%s [%s]" % (self.url, self.software)
+
 class SourceToTechnoLines(models.Model):
     """
     Number of lines for a given (Code, Technology) pair
