@@ -2,40 +2,80 @@ import os, sys
 import subprocess
 
 from django.conf import settings
-from projects.models import Code, SourceCode, SourceToTechnoLines, Technology
+from projects.models import Code, SourceCode, Repository, SourceToTechnoLines, Technology
 
-def count_lines(sourcecode, rm_required=True):
+def extract_sourcecode(sourcecode):
+    """
+    Extract SourceCode's archive to the current working directory
+    """
+
+    # Untar the tar.gz file
+    media_path = settings.MEDIA_ROOT
+    if sourcecode.archive.name.endswith(".tar.gz"):
+        untar_process = subprocess.Popen(['tar', 'zxf', os.path.join(media_path, sourcecode.archive.name)])
+    elif sourcecode.archive.name.endswith(".zip"):
+        untar_process = subprocess.Popen(['unzip', '-qq', '-u', os.path.join(media_path, sourcecode.archive.name), '-d', os.getcwd()])
+    untar_process.wait()
+
+def extract_repository(repository):
+    """
+    Clone repository to the current working directory
+    """
+    
+    if repository.software == "git":
+        clone_process = subprocess.Popen(['git', 'clone', '--quiet', repository.url])
+    elif repository.software == "hg":
+        clone_process = subprocess.Popen(['hg', 'clone', '--noninteractive', '--quiet', repository.url])
+    elif repository.software == "zip":
+        pass # TODO requests.head If-Modified-Since: Sat, 29 Oct 1994 19:43:31 GMT => 304..
+
+    clone_process.wait()
+
+def count_lines(code, rm_required=True):
     """
     Count the number of lines for each (root/main) programming language
     in a given source code
     """
-    
-    code = Code.objects.get(id=sourcecode.pk)
+   
+    # Get real object (code_cast) and Code (code)
 
-    if sourcecode.lines_ready:
+    if code.lines_ready:
         return
     
-    # Untar/Unzip the file
+    if isinstance(code, SourceCode):
+        code_cast = code
+        code = Code.objects.get(id=code_cast.pk)
+    elif isinstance(code, Repository):
+        code_cast = code
+        code = Code.objects.get(id=code_cast.pk)
+    else:
+        code_cast = code.cast()
+        if not isinstance(code_cast, SourceCode) and not isinstance(code_cast, Repository):
+            return
+
+    # Project Directory
 
     media_path = settings.MEDIA_ROOT
-    # "Untar" directory
-    dir_path = os.path.join(media_path, "sourcecode", "sc_%d" % sourcecode.pk)
+    # "unzipped" project directory
+    dir_path = os.path.join(media_path, "sourcecode", "sc_%d" % code.pk)
 
-    # Create "untar" if it does not exist
+    # Create project directory if it does not exist
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
-    # Change current working directory for "untar" directory
+    # Change current working directory for projectdirectory
+    os.chdir(dir_path)
+    
+    # Extraction
+    
+    if isinstance(code_cast, SourceCode):
+        extract_sourcecode(code_cast)
+    elif isinstance(code_cast, Repository):
+        extract_repository(code_cast)
+    
+    # Count lines
+    
     os.chdir(dir_path)
 
-    # Untar the tar.gz file
-    if sourcecode.archive.name.endswith(".tar.gz"):
-        untar_process = subprocess.Popen(['tar', 'zxf', os.path.join(media_path, sourcecode.archive.name)])
-    elif sourcecode.archive.name.endswith(".zip"):
-        untar_process = subprocess.Popen(['unzip', '-u', os.path.join(media_path, sourcecode.archive.name), '-d', dir_path])
-    untar_process.wait()
-
-    # Count #lines for each Technology
-    
     # Delete everything that was already computed for that SourceCode
     SourceToTechnoLines.objects.filter(code=code).delete()
     
@@ -49,7 +89,7 @@ def count_lines(sourcecode, rm_required=True):
         # find /home/django-portfolio/ -type f \( -regextype posix-extended -regex ".*\.(js|css)" -not -path "*/exclude/*" \)
      
         cmd_find = ["find", ".", "-type", "f", "(", "-regextype", "posix-extended", "-regex", ".*\.(%s)" % techno.file_extensions]
-        exclude_paths_list = sourcecode.exclude_paths.split('\r\n')
+        exclude_paths_list = code.exclude_paths.split('\r\n')
         for exclude_path in exclude_paths_list:
             if len(exclude_path) > 0:
                 cmd_find += ["-not", "-path", exclude_path]
@@ -71,13 +111,13 @@ def count_lines(sourcecode, rm_required=True):
             pass
         except TypeError:
             pass
-    
+
     # Supprime les fichiers extraits
     
     if rm_required:
         del_process = subprocess.Popen(["rm", "-rf", dir_path])
         del_process.wait()
     
-    sourcecode.lines_ready = True
-    sourcecode.save()
+    code.lines_ready = True
+    code.save()
 

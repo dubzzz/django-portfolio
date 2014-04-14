@@ -368,6 +368,10 @@ def add_repository_to(request, project_id):
             sc.project = project
             sc.save()
             
+            # Execute counting-lines operation
+            p = Process(target=count_lines, args=(sc, True,))
+            p.start()
+            
     return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
 
 @login_required
