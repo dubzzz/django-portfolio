@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block page_title %}404 - Not Found{% endblock %}
+{% block title %}404 - Not Found{% endblock %}
+{% block page_description %}404 - Not Found{% endblock %}
+
+{% block breadcrumb %}
+  <li><a href="{% url projects.views.home %}">Home</a></li>
+  <li class="active">404</li>
+{% endblock %}
+
+{% block content %}
+  <p>Umhhh.. Something get wrong when trying to generate the webpage you asked for.</p>
+{% endblock %}
+
