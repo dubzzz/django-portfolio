@@ -8,6 +8,11 @@ import django.conf.global_settings as DEFAULT_SETTINGS
 BASE_PATH = ''
 
 HEADER_ADMIN = ('Your Name', 'http://mysite.com')
+
+# Optional: HEADER_GPLUS = "https://google-plus-profile/"
+# Authorship: https://support.google.com/webmasters/topic/6003069?hl=en&ref_topic=4598733
+HEADER_GPLUS = None #default value
+
 HEADER_QUICKLINKS = (
 #    ('github', 'https://github.com/*****'),
 #    ('linkedin', 'http://www.linkedin.com/pub/*****'),

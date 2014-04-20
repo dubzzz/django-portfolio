@@ -52,6 +52,7 @@
     img_url.push("/static/themes/{{ THEME }}/img/github-letterpress-on.png");
     img_url.push("/static/themes/{{ THEME }}/img/linkedin-letterpress-on.png");
     img_url.push("/static/themes/{{ THEME }}/img/viadeo-letterpress-on.png");
+    {% if HEADER_GPLUS %}img_url.push("/static/img/gplus-on.png");{% endif %}
     {% for quicklink in FOOTER_QUICKLINKS %}
       img_url.push("{{ quicklink.2|escapejs }}");
     {% endfor %}
@@ -72,7 +73,7 @@
 <div class="container">
 	<div class="header">
 		<h1>{% block title %}{% endblock %}</h1>
-    <p>by <a href="{{ HEADER_ADMIN.1 }}" target="_blank">{{ HEADER_ADMIN.0 }}</a></p>
+    <p>by <a href="{{ HEADER_ADMIN.1 }}" target="_blank">{{ HEADER_ADMIN.0 }}</a> {% if HEADER_GPLUS %}<a href="{{ HEADER_GPLUS }}?rel=author"><img src="/static/img/gplus-off.png" onmouseover="this.src='/static/img/gplus-on.png';" onmouseout="this.src='/static/img/gplus-off.png';" /></a>{% endif %}</p>
     
     {% for quicklink in HEADER_QUICKLINKS %}
     <a href="{{ quicklink.1 }}" target="blank_" id="{{ quicklink.0 }}" class="social-network-letterpress" title="{{ quicklink.0|capfirst }}"></a>
