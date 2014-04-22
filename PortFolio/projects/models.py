@@ -86,6 +86,9 @@ class Project(models.Model):
 
         return reverse('projects.views.show_project', args=[self.year, self.name_url,])
 
+    class Meta:
+        unique_together = ("name_url", "year",)
+
 @receiver(pre_delete, sender=Project, dispatch_uid='project_delete_signal')
 def pre_delete_project(sender, instance, using, **kwargs):
     """
