@@ -1,7 +1,16 @@
 from django.conf.urls import patterns, include, url
+from django.contrib.sitemaps.views import sitemap
+
+from projects.sitemaps import StaticViewSitemap, ProjectViewSitemap
+
+sitemaps = {
+    'static': StaticViewSitemap,
+    'projects': ProjectViewSitemap,
+}
 
 urlpatterns = patterns('projects.views',
     url('^$', 'home'),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}),
     url('^edit/project/(?P<project_id>\d+)/add/download/$', 'add_download_to'),
     url('^edit/project/(?P<project_id>\d+)/add/sourcecode/$', 'add_sourcecode_to'),
     url('^edit/project/(?P<project_id>\d+)/add/repository/$', 'add_repository_to'),

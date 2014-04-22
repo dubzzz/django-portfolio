@@ -16,6 +16,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 
+from django.core.urlresolvers import reverse
+
 from projects.CustomFileField import CustomFileField
 
 def log(text):
@@ -73,6 +75,13 @@ class Project(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_absolute_url(self):
+        """
+        Method called during sitemap generation
+        """
+
+        return reverse('projects.views.show_project', args=[self.name_url,])
 
 @receiver(pre_delete, sender=Project, dispatch_uid='project_delete_signal')
 def pre_delete_project(sender, instance, using, **kwargs):
