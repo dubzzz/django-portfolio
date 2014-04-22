@@ -255,8 +255,8 @@ class Description(InheritanceCastModel):
         # abstract = True
         ordering = ["position"]
 
-@receiver(post_save, sender=Description, dispatch_uid='desription_save_signal')
-def post_save_desription(sender, instance, using, **kwargs):
+@receiver(post_save, sender=Description, dispatch_uid='description_save_signal')
+def post_save_description(sender, instance, using, **kwargs):
     instance.project.save() #Update modified
 
 class RawTextDescription(Description):
@@ -378,7 +378,7 @@ class RawTextDescription(Description):
         """
 
         self.description_html = self.rawtext_to_html()
-        super(Description, self).save(*args, **kwargs)
+        super(RawTextDescription, self).save(*args, **kwargs)
     
     def get_safe_html(self, parent=None):
         """
