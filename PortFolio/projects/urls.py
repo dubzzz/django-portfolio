@@ -1,10 +1,11 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.sitemaps.views import sitemap
 
-from projects.sitemaps import StaticViewSitemap, ProjectViewSitemap
+from projects.sitemaps import StaticViewSitemap, YearViewSitemap, ProjectViewSitemap
 
 sitemaps = {
     'static': StaticViewSitemap,
+    'years': YearViewSitemap,
     'projects': ProjectViewSitemap,
 }
 
