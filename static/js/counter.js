@@ -32,7 +32,7 @@ function run_counters() {
 		if (current_counter_value < 10)
 			next_counter_value++;
 		else
-			next_counter_value = Math.floor(1.2 * current_counter_value);
+			next_counter_value = Math.floor(1.5 * current_counter_value);
 		
 		if (next_counter_value <= counter_max) {
 			done = false;
