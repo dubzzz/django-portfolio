@@ -2,7 +2,7 @@
 
 import os
 import sys
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -66,6 +66,25 @@ LIMIT 3;
         return render_to_response('home.html', {"stats": stats, "projects": Project.objects.all().order_by("-year"), "empty_project_form": ProjectForm()}, context_instance=RequestContext(request))
     else:    
         return render_to_response('home.html', {"stats": stats, "projects": Project.objects.filter(private=False).order_by("-year")}, context_instance=RequestContext(request))
+
+def show_projects_year(request, year):
+    """
+    Show projects developped during a given year
+    If there is nothing it returns a 404 webpage
+    """
+
+    if request.user.is_authenticated():
+        projects = Project.objects.filter(year=year)
+    else:    
+        projects = Project.objects.filter(year=year, private=False)
+    
+    if projects.count() == 0:
+        raise Http404
+    
+    if request.user.is_authenticated():
+        return render_to_response('projects_year.html', {"year": year, "projects": projects, "empty_project_form": ProjectForm(initial={'year': year,})}, context_instance=RequestContext(request))
+    else:    
+        return render_to_response('projects_year.html', {"year": year, "projects": projects}, context_instance=RequestContext(request))
 
 def show_project(request, project_url):
     if request.user.is_authenticated():

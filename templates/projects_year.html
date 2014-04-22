@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block page_title %}{{ year }} - PortFolio{% endblock %}
+{% block title %}{{ year }} - PortFolio{% endblock %}
+{% block page_description %}Some projects that have been started and developped in {{ year }} by Nicolas DUBIEN{% endblock %}
+
+{% block breadcrumb %}
+  <li><a href="{% url projects.views.home %}">Home</a></li>
+  <li class="active">{{ year }}</li>
+{% endblock %}
+
+{% block content %}
+  <div class="details">
+    <h2 id="year{{ year }}" data-anchor="{{ year }}">{{ year }}</h2>
+    {% for project in projects %}
+      <div class="postit-wrapper">
+        <a href="{% url projects.views.show_project project.name_url %}">
+          <div class="postit {% if project.private %}private{% endif %}">
+            <h3>{{ project.name }}</h3>
+            <p>{{ project.short_description }}</p>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% include "add_project_form.html" %}
+{% endblock %}
+
+{% block js-preload %}
+  {% if request.user.is_authenticated %}
+    img_url.push("/static/img/more-on.png");
+  {% endif %}
+{% endblock %}
+

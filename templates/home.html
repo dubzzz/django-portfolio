@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load bootstrap %}
 
 {% block page_title %}PortFolio{% endblock %}
 {% block title %}PortFolio{% endblock %}
@@ -31,7 +30,9 @@
 
   {% for year_projects in by_year_list %}
 	  <div class="details">
-      <h2 id="year{{ year_projects.grouper }}" data-anchor="{{ year_projects.grouper }}">{{ year_projects.grouper }}</h2>
+      <a href="{% url projects.views.show_projects_year year_projects.grouper %}" title="Projects in {{ year_projects.grouper }}">
+        <h2 id="year{{ year_projects.grouper }}" data-anchor="{{ year_projects.grouper }}">{{ year_projects.grouper }}</h2>
+      </a>
       {% for project in year_projects.list %}
         <div class="postit-wrapper">
           <a href="{% url projects.views.show_project project.name_url %}">
@@ -44,46 +45,8 @@
       {% endfor %}
 	  </div>
 	{% endfor %}
-  
-  {% if request.user.is_authenticated %}
-    <div class="details" id="add-project">
-      <h2 id="year" data-anchor="Add">???</h2>
-      
-      <div class="postit-wrapper">
-        <a href="javascript:void(0);">
-          <div class="postit add-project">
-            <h3>New Project</h3>
-            <p></p>
-          </div>
-        </a>
-      </div>
 
-      <form method="post" class="form-horizontal" action="{% url projects.views.add_project %}">
-      {% csrf_token %}
-        <i class="glyphicon glyphicon-remove form-close"></i>
-        {{ empty_project_form|as_bootstrap }}
-        <div class="control-group"><div class="controls">
-            <button class="btn btn-primary" onclick="submit">Submit</button>
-        </div></div>
-      </form>
-
-      <script type="text/javascript">
-      <!--
-        $("#add-project form").hide();
-        
-        $("#add-project .postit").click(function() {
-          $("#add-project form").show();
-          $("#add-project .postit-wrapper").hide();    
-        });
-
-        $("#add-project form .form-close").click(function() {
-          $("#add-project form").hide();
-          $("#add-project .postit-wrapper").show();    
-        });
-      -->
-      </script>
-    </div>
-  {% endif %}  
+  {% include "add_project_form.html" %}
 {% endblock %}
 
 {% block js-preload %}

@@ -14,7 +14,7 @@
 
 {% block breadcrumb %}
   <li><a href="{% url projects.views.home %}">Home</a></li>
-  <li><a href="#">{{ project.year }}</a></li>
+  <li><a href="{% url projects.views.show_projects_year project.year %}">{{ project.year }}</a></li>
   <li class="active">{{ project.name }}</li>
 {% endblock %}
 

@@ -1,0 +1,42 @@
+{% load bootstrap %}
+
+{% if request.user.is_authenticated %}
+  <div class="details" id="add-project">
+    <h2 id="year" data-anchor="Add">???</h2>
+    
+    <div class="postit-wrapper">
+      <a href="javascript:void(0);">
+        <div class="postit add-project">
+          <h3>New Project</h3>
+          <p></p>
+        </div>
+      </a>
+    </div>
+
+    <form method="post" class="form-horizontal" action="{% url projects.views.add_project %}">
+    {% csrf_token %}
+      <i class="glyphicon glyphicon-remove form-close"></i>
+      {{ empty_project_form|as_bootstrap }}
+      <div class="control-group"><div class="controls">
+          <button class="btn btn-primary" onclick="submit">Submit</button>
+      </div></div>
+    </form>
+
+    <script type="text/javascript">
+    <!--
+      $("#add-project form").hide();
+      
+      $("#add-project .postit").click(function() {
+        $("#add-project form").show();
+        $("#add-project .postit-wrapper").hide();    
+      });
+
+      $("#add-project form .form-close").click(function() {
+        $("#add-project form").hide();
+        $("#add-project .postit-wrapper").show();    
+      });
+    -->
+    </script>
+  </div>
+{% endif %}  
+
