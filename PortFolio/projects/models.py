@@ -391,11 +391,19 @@ class RawTextDescription(Description):
 
         return self.description_html
 
+@receiver(post_save, sender=RawTextDescription, dispatch_uid='rawtextdescription_save_signal')
+def post_save_rawtextdescription(sender, instance, using, **kwargs):
+    instance.project.save() #Update modified
+
 class HtmlCodeDescription(Description):
     description = models.TextField(help_text=_("Description - Html Code"))
 
     def get_safe_html(self, parent=None):
         return self.description
+
+@receiver(post_save, sender=HtmlCodeDescription, dispatch_uid='htmlcodedescription_save_signal')
+def post_save_htmlcodedescription(sender, instance, using, **kwargs):
+    instance.project.save() #Update modified
 
 class ImageDescription(Description):
     def upload_path(self, filename):
@@ -407,6 +415,10 @@ class ImageDescription(Description):
     
     def get_safe_html(self):
         return """<p class="image"><img src="/media/%s" alt="%s" /><br/><span class="legend">%s</span></p>""" % (escape(self.image), escape(self.legend), escape(self.legend))
+
+@receiver(post_save, sender=ImageDescription, dispatch_uid='imagedescription_save_signal')
+def post_save_imagedescription(sender, instance, using, **kwargs):
+    instance.project.save() #Update modified
 
 @receiver(pre_delete, sender=ImageDescription, dispatch_uid='imagedescription_delete_signal')
 def pre_delete_imagedescription(sender, instance, using, **kwargs):
