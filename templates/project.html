@@ -5,6 +5,7 @@
 {% block page_title %}{{ project.name }} - PortFolio{% endblock %}
 {% block title %}Project: {{ project.name }}{% endblock %}
 {% block page_description %}{{ project.short_description }}{% endblock %}
+{% block specific_metas %}<meta http-equiv="last-modified" content="{{ project.modified|date:'r' }}" />{% endblock %}
 
 {% block additional_js %}
   <script src='/static/js/clear-selection.js'></script>
