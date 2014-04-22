@@ -25,7 +25,7 @@ urlpatterns = patterns('projects.views',
     url('^moveup/description/(?P<description_id>\d+)/$', 'move_up_description'),
     url('^movedown/description/(?P<description_id>\d+)/$', 'move_down_description'),
     url('^project/(?P<project_url>[^/]+)/$', 'show_project_depreciated'),
-    url('^(?P<year>\d{4})/(?P<project_url>[^/]+)/$', 'show_project'),
+    url('^(?P<year>\d{4})/(?P<project_url>[^/]+)\.html$', 'show_project'),
     url('^(?P<year>\d{4})/$', 'show_projects_year'),
     url('^get/code/lines/(?P<code_id>\d+)/$', 'get_code_lines'),
 )
