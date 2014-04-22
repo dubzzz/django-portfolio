@@ -44,3 +44,6 @@ class ProjectViewSitemap(sitemaps.Sitemap):
 
         return self.priority_min + (self.priority_max - self.priority_min) * (item.year - self.year_min) / (self.year_max - self.year_min)
 
+    def lastmod(self, item):
+        return item.modified
+

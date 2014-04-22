@@ -13,7 +13,7 @@ from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save
 from django.dispatch import receiver
 
 from django.core.urlresolvers import reverse
@@ -50,7 +50,10 @@ class Project(models.Model):
     
     category = models.ForeignKey(Category, help_text=_("Category"))
     technologies = models.ManyToManyField(Technology, help_text=_("Technologies"))
-    
+
+    created = models.DateTimeField(auto_now_add=True, help_text=_("Timestamp of creation"))
+    modified = models.DateTimeField(auto_now=True, help_text=_("Timestamp of last changes (Project or related objects)"))
+
     def update_technologies(self):
         """
         Add missing Technology to the M2M relation
@@ -107,6 +110,11 @@ class Download(models.Model):
 def pre_delete_download(sender, instance, using, **kwargs):
     if os.path.isfile(instance.down.path):
         os.remove(instance.down.path)
+
+@receiver(post_save, sender=Download, dispatch_uid='download_save_signal')
+def post_save_download(sender, instance, using, **kwargs):
+    if instance.project:
+        instance.project.save() #Update modified
 
 class InheritanceCastModel(models.Model):
     """
@@ -209,6 +217,9 @@ class Description(InheritanceCastModel):
     position = models.IntegerField(default=0, help_text=_("Description's position (the smallest at the top, default value implies last one)"))
     data_anchor = models.CharField(max_length=50, blank=True, null=True, help_text=_("Data-anchor value (used to generate the wavy-menu) - optional"))
     
+    created = models.DateTimeField(auto_now_add=True, help_text=_("Timestamp of creation"))
+    modified = models.DateTimeField(auto_now=True, help_text=_("Timestamp of last changes"))
+    
     def save(self, *args, **kwargs):
         """
         Auto-defined position value, if not defined (or =0)
@@ -243,6 +254,10 @@ class Description(InheritanceCastModel):
         # instead of: projects_description
         # abstract = True
         ordering = ["position"]
+
+@receiver(post_save, sender=Description, dispatch_uid='desription_save_signal')
+def post_save_desription(sender, instance, using, **kwargs):
+    instance.project.save() #Update modified
 
 class RawTextDescription(Description):
     description = models.TextField(help_text=_("Description - Raw Text"))
