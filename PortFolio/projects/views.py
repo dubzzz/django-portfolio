@@ -86,9 +86,9 @@ def show_projects_year(request, year):
     else:    
         return render_to_response('projects_year.html', {"year": year, "projects": projects}, context_instance=RequestContext(request))
 
-def show_project(request, project_url):
+def show_project(request, year, project_url):
     if request.user.is_authenticated():
-        project = get_object_or_404(Project, name_url=project_url)
+        project = get_object_or_404(Project, year=year, name_url=project_url)
         
         project_form = ProjectForm(instance=project)
         empty_download_form = DownloadForm()
@@ -101,8 +101,27 @@ def show_project(request, project_url):
         }
         return render_to_response('project.html', {"project": project, "project_form": project_form, "empty_download_form": empty_download_form, "empty_sourcecode_form": empty_sourcecode_form, "empty_repository_form": empty_repository_form, "empty_forms": empty_forms}, context_instance=RequestContext(request))
     else:
-        project = get_object_or_404(Project, name_url=project_url, private=False)
+        project = get_object_or_404(Project, year=year, name_url=project_url, private=False)
         return render_to_response('project.html', {"project": project}, context_instance=RequestContext(request))
+
+def show_project_depreciated(request, project_url):
+    """
+    Former urls
+    
+    Recent urls needs year and name_url in order to target the right page
+    This view was created in an attempt to avoid reducing ranking due to deleted webpages
+    
+    Some people believe that using urls that have some hierarchical pattern visible is better for ranking
+    /2014/bubble_gum_image/ gives some details for the users
+    It also allows users to get only projects created in 2014 by using /2014/.
+    """
+
+    if request.user.is_authenticated():
+        project = get_object_or_404(Project, name_url=project_url)
+    else:
+        project = get_object_or_404(Project, name_url=project_url, private=False)
+
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url,]))
 
 def logout(request):
     """
@@ -132,7 +151,7 @@ def add_project(request):
             project.update_technologies()
     
     if project:
-        return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+        return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url]))
     else:    
         return HttpResponseRedirect(reverse('projects.views.home'))
 
@@ -153,7 +172,7 @@ def update_project(request, project_id):
             p = form.save()
             p.update_technologies()
 
-    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url]))
 
 @login_required
 def delete_project(request, project_id):
@@ -192,7 +211,7 @@ def add_description_to(request, project_id, description_type):
             description_elt.project = project
             description_elt.save()
     
-    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url]))
 
 @login_required
 def update_description(request, description_id):
@@ -227,7 +246,7 @@ def update_description(request, description_id):
                 pass
             real_description.save()
 
-    return HttpResponseRedirect(reverse('projects.views.show_project', args=[description.project.name_url]))
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[description.project.year, description.project.name_url]))
 
 @login_required
 def delete_description(request, description_id):
@@ -242,7 +261,7 @@ def delete_description(request, description_id):
     
     real_description.delete() # pre_delete is automatically called to delete files (if required)
 
-    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url]))
 
 def restore_descriptions_positions(project):
     current_pos = 1
@@ -281,7 +300,7 @@ def move_up_description(request, description_id):
         
     except IndexError, e:
         pass # The description is already the one at the top
-    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url]))
 
 @login_required
 def move_down_description(request, description_id):
@@ -313,7 +332,7 @@ def move_down_description(request, description_id):
         
     except IndexError, e:
         pass # The description is already the one at the top
-    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url]))
 
 @login_required
 def add_download_to(request, project_id):
@@ -332,7 +351,7 @@ def add_download_to(request, project_id):
             down.project = project
             down.save()
     
-    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url]))
 
 @login_required
 def delete_download(request, download_id):
@@ -345,7 +364,7 @@ def delete_download(request, download_id):
     
     down.delete() # pre_delete is automatically called to delete files (if required)
 
-    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url]))
 
 @login_required
 def add_sourcecode_to(request, project_id):
@@ -368,7 +387,7 @@ def add_sourcecode_to(request, project_id):
             p = Process(target=count_lines, args=(sc, True,))
             p.start()
 
-    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url]))
 
 @login_required
 def add_repository_to(request, project_id):
@@ -391,7 +410,7 @@ def add_repository_to(request, project_id):
             p = Process(target=count_lines, args=(sc, True,))
             p.start()
             
-    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.name_url]))
+    return HttpResponseRedirect(reverse('projects.views.show_project', args=[project.year, project.name_url]))
 
 @login_required
 def get_code_lines(request, code_id):

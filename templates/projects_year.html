@@ -14,7 +14,7 @@
     <h2 id="year{{ year }}" data-anchor="{{ year }}">{{ year }}</h2>
     {% for project in projects %}
       <div class="postit-wrapper">
-        <a href="{% url projects.views.show_project project.name_url %}">
+        <a href="{% url projects.views.show_project project.year project.name_url %}">
           <div class="postit {% if project.private %}private{% endif %}">
             <h3>{{ project.name }}</h3>
             <p>{{ project.short_description }}</p>

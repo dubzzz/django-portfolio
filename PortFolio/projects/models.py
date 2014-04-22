@@ -84,7 +84,7 @@ class Project(models.Model):
         Method called during sitemap generation
         """
 
-        return reverse('projects.views.show_project', args=[self.name_url,])
+        return reverse('projects.views.show_project', args=[self.year, self.name_url,])
 
 @receiver(pre_delete, sender=Project, dispatch_uid='project_delete_signal')
 def pre_delete_project(sender, instance, using, **kwargs):
