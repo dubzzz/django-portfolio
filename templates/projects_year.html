@@ -10,6 +10,11 @@
 {% endblock %}
 
 {% block content %}
+  <ul class="pager">
+    {% if prev_year %}<li class="previous"><a href="{% url projects.views.show_projects_year prev_year %}">&larr; {{ prev_year }}</a></li>{% endif %}
+    {% if next_year %}<li class="next"><a href="{% url projects.views.show_projects_year next_year %}">{{ next_year }} &rarr;</a></li>{% endif %}
+  </ul>  
+  
   <div class="details">
     <h2 id="year{{ year }}" data-anchor="{{ year }}">{{ year }}</h2>
     {% for project in projects %}

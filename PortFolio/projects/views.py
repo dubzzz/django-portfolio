@@ -75,16 +75,40 @@ def show_projects_year(request, year):
 
     if request.user.is_authenticated():
         projects = Project.objects.filter(year=year)
+        try:
+            next_year = Project.objects.filter(year__gt=year).values('year').distinct().order_by('year')[0]['year']
+        except IndexError:
+            next_year = None
+        except KeyError:
+            next_year = None
+        try:
+            prev_year = Project.objects.filter(year__lt=year).values('year').distinct().order_by('-year')[0]['year']
+        except IndexError:
+            prev_year = None
+        except KeyError:
+            prev_year = None
     else:    
         projects = Project.objects.filter(year=year, private=False)
+        try:
+            next_year = Project.objects.filter(year__gt=year, private=False).values('year').distinct().order_by('year')[0]['year']
+        except IndexError:
+            next_year = None
+        except KeyError:
+            next_year = None
+        try:
+            prev_year = Project.objects.filter(year__lt=year, private=False).values('year').distinct().order_by('-year')[0]['year']
+        except IndexError:
+            prev_year = None
+        except KeyError:
+            prev_year = None
     
     if projects.count() == 0:
         raise Http404
-    
+
     if request.user.is_authenticated():
-        return render_to_response('projects_year.html', {"year": year, "projects": projects, "empty_project_form": ProjectForm(initial={'year': year,})}, context_instance=RequestContext(request))
+        return render_to_response('projects_year.html', {"year": year, "prev_year": prev_year, "next_year": next_year, "projects": projects, "empty_project_form": ProjectForm(initial={'year': year,})}, context_instance=RequestContext(request))
     else:    
-        return render_to_response('projects_year.html', {"year": year, "projects": projects}, context_instance=RequestContext(request))
+        return render_to_response('projects_year.html', {"year": year, "prev_year": prev_year, "next_year": next_year, "projects": projects}, context_instance=RequestContext(request))
 
 def show_project(request, year, project_url):
     if request.user.is_authenticated():
