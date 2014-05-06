@@ -41,4 +41,5 @@ settings.py
 /static/private
 admin
 /templates/home_content.html
+/templates/base_head.html
 /media
