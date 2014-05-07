@@ -65,7 +65,7 @@
     <p>by <a href="{{ HEADER_ADMIN.1 }}" target="_blank">{{ HEADER_ADMIN.0 }}</a> {% if HEADER_GPLUS %}<a href="{{ HEADER_GPLUS }}?rel=author"><img src="/static/img/gplus-off.png" alt="Google+ Profile" onmouseover="this.src='/static/img/gplus-on.png';" onmouseout="this.src='/static/img/gplus-off.png';" /></a>{% endif %}</p>
     
     {% for quicklink in HEADER_QUICKLINKS %}
-    <a href="{{ quicklink.1 }}" target="blank_" id="{{ quicklink.0 }}" class="social-network-letterpress" title="{{ quicklink.0|capfirst }}"></a>
+    <a href="{{ quicklink.1 }}" target="blank_" id="{{ quicklink.0 }}" class="social-network-letterpress" title="{{ quicklink.0|capfirst }} account of {{ HEADER_ADMIN.0 }}"></a>
     {% endfor %}
 		<ol class="breadcrumb">{% block breadcrumb %}{% endblock %}</ol>
 	</div>
