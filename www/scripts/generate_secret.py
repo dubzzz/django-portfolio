@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Code taken from https://gist.github.com/didip/823887
+# Code taken from https://gist.github.com/z0u/a74d6dd9a035bdd0745d
 import base64
-import uuid
-print(base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes))
+import os
+print(base64.b64encode(os.urandom(50)).decode('ascii'))
