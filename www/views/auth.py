@@ -7,12 +7,24 @@ from os import path
 
 __CURRENT_PATH = path.dirname(__file__)
 
+sys.path.append(path.join(__CURRENT_PATH, ".."))
+from config import HEADER_ADMIN, HEADER_GPLUS, HEADER_QUICKLINKS, FOOTER_TEXT, FOOTER_QUICKLINKS, THEME, STATS
+
 sys.path.append(path.join(__CURRENT_PATH, "..", "scripts"))
 from generate_db import DEFAULT_DB
 
 class BaseHandler(RequestHandler):
     def get_current_user(self):
         return self.get_secure_cookie("username")
+    def render(self, filename, **kwargs):
+        kwargs["HEADER_ADMIN"] = HEADER_ADMIN
+        kwargs["HEADER_GPLUS"] = HEADER_GPLUS
+        kwargs["HEADER_QUICKLINKS"] = HEADER_QUICKLINKS
+        kwargs["FOOTER_TEXT"] = FOOTER_TEXT
+        kwargs["FOOTER_QUICKLINKS"] = FOOTER_QUICKLINKS
+        kwargs["THEME"] = THEME
+        kwargs["AUTHENTIFICATED"] = self.get_current_user() != None and self.get_current_user() != ""
+        return super(BaseHandler, self).render(filename, **kwargs)
 
 class LoginHandler(BaseHandler):
     def get(self):

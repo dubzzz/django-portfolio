@@ -1,1 +1,23 @@
+
 COOKIE_SECRET = "__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__"
+
+HEADER_ADMIN = ('Your Name', 'http://mysite.com')
+
+# Optional: HEADER_GPLUS = "https://google-plus-profile/"
+# Authorship: https://support.google.com/webmasters/topic/6003069?hl=en&ref_topic=4598733
+HEADER_GPLUS = None #default value
+
+HEADER_QUICKLINKS = (
+#    ('github', 'https://github.com/*****'),
+#    ('linkedin', 'http://www.linkedin.com/pub/*****'),
+#    ('viadeo', 'http://fr.viadeo.com/fr/profile/*****'),
+)
+
+FOOTER_TEXT = ''
+FOOTER_QUICKLINKS = (
+#     ('alt text', 'url', 'mouseover image', 'mouseout image'),
+)
+
+THEME = 'school' # also: 'leather'
+STATS = 'num_projects' # also: 'num_lines'
+

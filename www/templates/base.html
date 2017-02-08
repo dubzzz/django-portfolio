@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   
-  <title>{% block page_title %}{% endblock %}</title>
-  <meta name="description" content="{% block page_description %}{% endblock %}" />
-  <meta name="robots" content="{% block page_robots %}index, follow{% endblock %}" />
-  {% block specific_metas %}{% endblock %}
+  <title>{% block page_title %}{% end %}</title>
+  <meta name="description" content="{% block page_description %}{% end %}" />
+  <meta name="robots" content="{% block page_robots %}index, follow{% end %}" />
+  {% block specific_metas %}{% end %}
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -25,7 +25,7 @@
   <link href='/static/css/form.css' rel='stylesheet' type='text/css' />
   <link href='/static/themes/{{ THEME }}/css/main.css' rel='stylesheet' type='text/css' />
 	<script src='/static/js/data-confirm.js'></script>
-  {% block additional_js %}{% endblock %}
+  {% block additional_js %}{% end %}
 
   <!-- WavyMenu -->
 	<script src='/static/js-wavymenu/wavy.js'></script>
@@ -41,12 +41,12 @@
     img_url.push("/static/themes/{{ THEME }}/img/github-letterpress-on.png");
     img_url.push("/static/themes/{{ THEME }}/img/linkedin-letterpress-on.png");
     img_url.push("/static/themes/{{ THEME }}/img/viadeo-letterpress-on.png");
-    {% if HEADER_GPLUS %}img_url.push("/static/img/gplus-on.png");{% endif %}
+    {% if HEADER_GPLUS %}img_url.push("/static/img/gplus-on.png");{% end %}
     {% for quicklink in FOOTER_QUICKLINKS %}
-      img_url.push("{{ quicklink.2|escapejs }}");
-    {% endfor %}
+      img_url.push("{{ quicklink[2] }}");
+    {% end %}
 
-    {% block js-preload %}{% endblock %}
+    {% block js-preload %}{% end %}
 
     var img_loader = new Array();
     function preloader() {
@@ -61,17 +61,17 @@
 <body onLoad="javascript:preloader();">
 <div class="container">
 	<div class="header">
-		<h1>{% block title %}{% endblock %}</h1>
-    <p>by <a href="{{ HEADER_ADMIN.1 }}" target="_blank">{{ HEADER_ADMIN.0 }}</a> {% if HEADER_GPLUS %}<a href="{{ HEADER_GPLUS }}?rel=author"><img src="/static/img/gplus-off.png" alt="Google+ Profile" onmouseover="this.src='/static/img/gplus-on.png';" onmouseout="this.src='/static/img/gplus-off.png';" /></a>{% endif %}</p>
+		<h1>{% block title %}{% end %}</h1>
+    <p>by <a href="{{ HEADER_ADMIN[1] }}" target="_blank">{{ HEADER_ADMIN[0] }}</a> {% if HEADER_GPLUS %}<a href="{{ HEADER_GPLUS }}?rel=author"><img src="/static/img/gplus-off.png" alt="Google+ Profile" onmouseover="this.src='/static/img/gplus-on.png';" onmouseout="this.src='/static/img/gplus-off.png';" /></a>{% end %}</p>
     
     {% for quicklink in HEADER_QUICKLINKS %}
-    <a href="{{ quicklink.1 }}" target="blank_" id="{{ quicklink.0 }}" class="social-network-letterpress" title="{{ quicklink.0|capfirst }} account of {{ HEADER_ADMIN.0 }}"></a>
-    {% endfor %}
-		<ol class="breadcrumb">{% block breadcrumb %}{% endblock %}</ol>
+    <a href="{{ quicklink[1] }}" target="blank_" id="{{ quicklink[0] }}" class="social-network-letterpress" title="{{ quicklink[0] }} account of {{ HEADER_ADMIN[0] }}"></a>
+    {% end %}
+		<ol class="breadcrumb">{% block breadcrumb %}{% end %}</ol>
 	</div>
   <div class="header-shadow"></div>
 	
-  <div class="content">{% block content %}{% endblock %}</div>
+  <div class="content">{% block content %}{% end %}</div>
   <ul class="menu-items-right"></ul>
   
   <div class="footer-shadow"></div>
@@ -79,15 +79,15 @@
     {{ FOOTER_TEXT }}
     <p class="qrcodes">
       {% for quicklink in FOOTER_QUICKLINKS %}
-      <a href="{{ quicklink.1 }}" target="blank_" title="{{ quicklink.0 }}"><img src="{{ quicklink.3 }}" onmouseover="this.src='{{ quicklink.2|escapejs }}';" onmouseout="this.src='{{ quicklink.3|escapejs }}';" alt="{{ quicklink.0 }}" /></a>
-      {% endfor %}
+      <a href="{{ quicklink[1] }}" target="blank_" title="{{ quicklink[0] }}"><img src="{{ quicklink[3] }}" onmouseover="this.src='{{ quicklink[2] }}';" onmouseout="this.src='{{ quicklink[3] }}';" alt="{{ quicklink[0] }}" /></a>
+      {% end %}
     </p>
     <p class="goto-login">
-      {% if request.user.is_authenticated %}
-        <a href="{% url projects.views.logout %}" rel="nofollow"><i class="glyphicon glyphicon-off"></i> Logout</a>
+      {% if AUTHENTIFICATED %}
+        <a href="{{ reverse_url('logout') }}" rel="nofollow"><i class="glyphicon glyphicon-off"></i> Logout</a>
       {% else %}
-        <a href="{% url django.contrib.auth.views.login %}?next={{ request.path }}" rel="nofollow"><i class="glyphicon glyphicon-off"></i> Login</a>
-      {% endif %}
+        <a href="{{ reverse_url('login') }}?next={{ request.path }}" rel="nofollow"><i class="glyphicon glyphicon-off"></i> Login</a>
+      {% end %}
     </p>
   </div>
 </div>
