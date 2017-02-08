@@ -43,3 +43,8 @@ admin
 /templates/home_content.html
 /templates/base_head.html
 /media
+
+# Tornado configuration files
+/www/config.py
+/www/projects.db
+
