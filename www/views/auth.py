@@ -19,6 +19,8 @@ from generate_db import DEFAULT_DB
 class BaseHandler(RequestHandler):
     def get_current_user(self):
         return self.get_secure_cookie("username")
+    def is_authentificated(self):
+        return self.get_current_user() != None and self.get_current_user() != ""
     def render(self, filename, **kwargs):
         kwargs["HEADER_ADMIN"] = HEADER_ADMIN
         kwargs["HEADER_GPLUS"] = HEADER_GPLUS
@@ -26,7 +28,7 @@ class BaseHandler(RequestHandler):
         kwargs["FOOTER_TEXT"] = FOOTER_TEXT
         kwargs["FOOTER_QUICKLINKS"] = FOOTER_QUICKLINKS
         kwargs["THEME"] = THEME
-        kwargs["AUTHENTIFICATED"] = self.get_current_user() != None and self.get_current_user() != ""
+        kwargs["AUTHENTIFICATED"] = self.is_authentificated()
         kwargs["AUTHENTIFICATED_USERNAME"] = self.get_current_user()
         return super(BaseHandler, self).render(filename, **kwargs)
 

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block page_title %}PortFolio{% end %}
+{% block title %}PortFolio{% end %}
+{% block page_description %}Nicolas Dubien's career portfolio describes and gives details concerning some of my major programing projects{% end %}
+{% block additional_js %}<script src='/static/js/counter.js'></script>{% end %}
+
+{% block breadcrumb %}
+	<li class="active">Home</li>
+{% end %}
+
+{% block content %}
+  {% include "home_content.html" %}
+   
+  {% if STATS is not None %}
+  <div class="stats">
+    {% for techno in stats %}
+      <div class="stats-details">
+        <p class="techno">{{ techno }}</p>
+        <p class="techno-num" data-counter="{{ techno.num }}">0</p>
+        <p class="techno-num-type">{% if STATS == "num_projects" %}projects{% elif STATS == "num_lines" %}lines{% end %}</p>
+      </div>
+    {% end %}
+    <script type="text/javascript">run_counters();</script>
+  </div>
+  <p class="legend">My {{ len(stats) }} main programming languages</p>
+  {% end %}
+
+  {% for year, projects in by_year_list %}
+	  <div class="details">
+      <a href="{{ reverse_url('show_projects_year', year) }}" title="Projects in {{ year }}">
+        <h2 id="year{{ year }}" data-anchor="{{ year }}">{{ year }}</h2>
+      </a>
+      {% for project in projects %}
+        <div class="postit-wrapper">
+          <a href="{{ reverse_url('show_project', year, project.name_url) }}">
+            <div class="postit {% if project.private %}private{% end %}">
+              <h3>{{ project.name }}</h3>
+              <p>{{ project.short_description }}</p>
+            </div>
+          </a>
+        </div>
+      {% end %}
+	  </div>
+	{% end %}
+
+  {% include "add_project_form.html" %}
+{% end %}
+
+{% block js-preload %}
+  {% if AUTHENTIFICATED %}
+    img_url.push("/static/img/more-on.png");
+  {% end %}
+{% end %}
+

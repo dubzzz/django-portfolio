@@ -49,4 +49,5 @@ admin
 /www/config.py
 /www/static/private
 /www/templates/base_head.html
+/www/templates/home_content.html
 

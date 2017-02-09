@@ -14,7 +14,7 @@ __TEMPLATES_ABSPATH = path.join(__CURRENT_ABSPATH, "templates")
 
 sys.path.append(path.join(__CURRENT_PATH, "views"))
 from auth import LoginHandler, LogoutHandler
-from projects import HomeHandler
+from projects import HomeHandler, ProjectHandler, PerYearHandler
 
 sys.path.append(path.join(__CURRENT_PATH, "views", "modules"))
 import uimodules
@@ -43,8 +43,8 @@ application = Application([
     #url('^moveup/description/(?P<description_id>\d+)/$', 'move_up_description'),
     #url('^movedown/description/(?P<description_id>\d+)/$', 'move_down_description'),
     #url('^project/(?P<project_url>[^/]+)/$', 'show_project_depreciated'),
-    #url('^(?P<year>\d{4})/(?P<project_url>[^/]+)\.html$', 'show_project'),
-    #url('^(?P<year>\d{4})/$', 'show_projects_year'),
+    url(r"(?P<year>\d{4})/(?P<project_url>[^/]+)\.html", ProjectHandler, name="show_project"),
+    url(r"(?P<year>\d{4})/", PerYearHandler, name="show_projects_year"),
     #url('^get/code/lines/(?P<code_id>\d+)/$', 'get_code_lines'),
     url(r"/login", LoginHandler, name="login"),
     url(r"/logout", LogoutHandler, name="logout"),
