@@ -16,10 +16,14 @@ sys.path.append(path.join(__CURRENT_PATH, "views"))
 from auth import LoginHandler, LogoutHandler
 from projects import HomeHandler
 
+sys.path.append(path.join(__CURRENT_PATH, "views", "modules"))
+import uimodules
+
 settings = {
     "cookie_secret": COOKIE_SECRET,
     "login_url": "/login",
     "template_path": __TEMPLATES_ABSPATH,
+    "ui_modules": uimodules,
     "xsrf_cookies": True,
 }
 

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block page_title %}PortFolio - Logout page{% end %}
+{% block title %}PortFolio- Logout page{% end %}
+{% block page_description %}Career portfolio - Logout page{% end %}
+{% block page_robots %}noindex, nofollow{% end %}
+
+{% block breadcrumb %}
+  <li><a href="{{ reverse_url('home') }}">Home</a></li>
+  <li class="active">Logout page</li>
+{% end %}
+
+{% block content %}
+<div>
+    <a href="{{ reverse_url('login') }}" style="float: right;"><i class="glyphicon glyphicon-off"></i> Login</a>
+    <h2>Logout</h2>
+</div>
+
+<p style="text-align:center;">
+    You've been logged out
+    <br/><a href="{{ reverse_url('home') }}"><i class="glyphicon glyphicon-home"></i> Back to Home</a>
+</p>
+{% end %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block page_title %}PortFolio - Login page{% end %}
+{% block title %}PortFolio- Login page{% end %}
+{% block page_description %}Career portfolio - Login page{% end %}
+{% block page_robots %}noindex, nofollow{% end %}
+
+{% block breadcrumb %}
+  <li><a href="{{ reverse_url('home') }}">Home</a></li>
+  <li class="active">Login page</li>
+{% end %}
+
+{% block content %}
+{% if AUTHENTIFICATED %}
+	<div>
+		<a href="{{ reverse_url('logout') }}" style="float: right;"><i class="glyphicon glyphicon-off"></i> Logout</a>
+		<h2>Login to PortFolio</h2>
+	</div>
+	
+	<p style="text-align:center;">
+		You're already logged in as {{ AUTHENTIFICATED_USERNAME }}
+		<br/><a href="{{ reverse_url('home') }}"><i class="glyphicon glyphicon-home"></i> Back to Home</a>
+	</p>
+{% else %}
+	{% if form.error %}
+	<div class="alert alert-error alert-block">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<h4>Error</h4>
+		Login or Password wrong
+	</div>
+	{% end %}
+	
+	<div style="position:relative;">
+		<h2>Login to PortFolio</h2>
+	</div>
+	
+	<form method="post" class="form-horizontal" action="{{ reverse_url('login') }}">
+		{% module xsrf_form_html() %}
+        {% module BootstrapForm(form=form) %}
+		<div class="control-group"><div class="controls"><button class="btn btn-primary" onclick="submit">Login</button></div></div>
+		<input type="hidden" name="next" value="{% if nextpage %}{{ nextpage }}{% else %}/{% end %}" />
+	</form>
+{% end %}
+{% end %}

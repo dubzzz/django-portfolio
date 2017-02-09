@@ -7,6 +7,9 @@ from os import path
 
 __CURRENT_PATH = path.dirname(__file__)
 
+sys.path.append(path.join(__CURRENT_PATH, "forms"))
+from forms import LoginForm
+
 sys.path.append(path.join(__CURRENT_PATH, ".."))
 from config import HEADER_ADMIN, HEADER_GPLUS, HEADER_QUICKLINKS, FOOTER_TEXT, FOOTER_QUICKLINKS, THEME, STATS
 
@@ -24,6 +27,7 @@ class BaseHandler(RequestHandler):
         kwargs["FOOTER_QUICKLINKS"] = FOOTER_QUICKLINKS
         kwargs["THEME"] = THEME
         kwargs["AUTHENTIFICATED"] = self.get_current_user() != None and self.get_current_user() != ""
+        kwargs["AUTHENTIFICATED_USERNAME"] = self.get_current_user()
         return super(BaseHandler, self).render(filename, **kwargs)
 
 class LoginHandler(BaseHandler):
@@ -32,24 +36,23 @@ class LoginHandler(BaseHandler):
             nextpage = self.request.arguments["next"][0].decode('utf_8')
         except (KeyError, IndexError) as e:
             nextpage = "/"
-        self.render("login.html", page="login", nextpage=nextpage)
+        self.render("login.html", page="login", nextpage=nextpage, form=LoginForm())
 
     def post(self):
         try:
             nextpage = self.request.arguments["next"][0].decode('utf_8')
         except (KeyError, IndexError) as e:
             nextpage = "/"
-        try:
-            username = self.request.arguments["username"][0].decode('utf_8')
-        except (KeyError, IndexError) as e:
-            self.render("login.html", page="login", nextpage=nextpage)
+        
+        loginform = LoginForm()
+        data = loginform.read(self)
+        if loginform.error:
+            self.render("login.html", page="login", nextpage=nextpage, form=loginform)
             return
-        try:
-            password = self.request.arguments["password"][0].decode('utf_8')
-        except (KeyError, IndexError) as e:
-            self.render("login.html", page="login", nextpage=nextpage)
-            return
-
+        
+        username = data["username"]
+        password = data["password"]
+        
         conn = sqlite3.connect(DEFAULT_DB)
         with conn:
             c = conn.cursor()
@@ -63,8 +66,9 @@ class LoginHandler(BaseHandler):
                     self.set_secure_cookie("username", username)
                     self.redirect(nextpage)
                     return
-
-        self.render("login.html", page="login", nextpage=nextpage)
+        
+        loginform.error = True
+        self.render("login.html", page="login", nextpage=nextpage, form=loginform)
 
 class LogoutHandler(BaseHandler):
     def get(self):

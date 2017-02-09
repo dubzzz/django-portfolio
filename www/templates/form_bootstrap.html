@@ -1,0 +1,11 @@
+{% for field in form.fields %}
+  <div class="control-group" id="{{ prefix }}__{{ field.field_name }}">
+    <label class="control-label{% if field.required %} required{% end %}" for="{{ field.field_name }}">{{ field.label }}</label>
+    <div class="controls">
+      {% raw field %}
+      <span class="text-error">{{ ", ".join(field.errors) }}</span>
+      <span class="help-block">{{ field.help_text }}</span>
+    </div>
+  </div>
+{% end %}
+
