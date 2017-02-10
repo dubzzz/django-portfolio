@@ -24,6 +24,9 @@ class PerYearHandler(BaseHandler):
 class ProjectHandler(BaseHandler):
     def get(self, year, project_url):
         project = load_project(year, project_url, not self.is_authentificated())
+        if project is None:
+            self.redirect(self.reverse_url('error_code', '404'))
+            return
         self.render("project.html", project=project)
 
 class ErrorHandler(BaseHandler):
