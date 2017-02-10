@@ -12,12 +12,12 @@ from project_summary import load_all_summaries, load_summaries_of_year, surround
 
 class HomeHandler(BaseHandler):
     def get(self):
-        self.render("home.html", STATS=None, by_year_list=load_all_summaries(self.is_authentificated()))
+        self.render("home.html", STATS=None, by_year_list=load_all_summaries(not self.is_authentificated()))
 
 class PerYearHandler(BaseHandler):
     def get(self, year):
-        projects=load_summaries_of_year(year, self.is_authentificated())
-        prev_year, next_year = surround_years(year, self.is_authentificated())
+        projects=load_summaries_of_year(year, not self.is_authentificated())
+        prev_year, next_year = surround_years(year, not self.is_authentificated())
         self.render("projects_year.html", projects=projects, year=year, prev_year=prev_year, next_year=next_year)
 
 class ProjectHandler(BaseHandler):
