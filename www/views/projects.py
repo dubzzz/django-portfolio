@@ -24,3 +24,12 @@ class ProjectHandler(BaseHandler):
     def get(self, year, project):
         self.render("base.html")
 
+class ErrorHandler(BaseHandler):
+    def get(self, error_code):
+        if error_code == "500":
+            self.set_status(500)
+            self.render("500.html")
+        else:
+            self.set_status(404)
+            self.render("404.html")
+

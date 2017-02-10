@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block page_title %}404 - Not Found{% end %}
+{% block title %}404 - Not Found{% end %}
+{% block page_description %}404 - Not Found{% end %}
+
+{% block breadcrumb %}
+  <li><a href="{{ reverse_url('home') }}">Home</a></li>
+  <li class="active">404</li>
+{% end %}
+
+{% block content %}
+  <p>Umhhh.. Something get wrong when trying to generate the webpage you asked for.</p>
+{% end %}
+
