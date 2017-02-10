@@ -1,40 +1,38 @@
 {% extends "base.html" %}
-{% load project_extras %}
-{% load bootstrap %}
 
-{% block page_title %}{{ project.name }} - PortFolio{% endblock %}
-{% block title %}Project: {{ project.name }}{% endblock %}
-{% block page_description %}{{ project.short_description }}{% endblock %}
-{% block specific_metas %}<meta http-equiv="last-modified" content="{{ project.modified|date:'r' }}" />{% endblock %}
+{% block page_title %}{{ project.name }} - PortFolio{% end %}
+{% block title %}Project: {{ project.name }}{% end %}
+{% block page_description %}{{ project.short_description }}{% end %}
+{% block specific_metas %}<meta http-equiv="last-modified" content="{{ project.modified }}" />{% end %}
 
 {% block additional_js %}
   <script src='/static/js/clear-selection.js'></script>
   <script src='/static/js/ajax_sourcecode_lines.js'></script>
-{% endblock %}
+{% end %}
 
 {% block breadcrumb %}
-  <li><a href="{% url projects.views.home %}">Home</a></li>
-  <li><a href="{% url projects.views.show_projects_year project.year %}">{{ project.year }}</a></li>
+  <li><a href="{{ reverse_url('home') }}">Home</a></li>
+  <li><a href="{{ reverse_url('show_projects_year', project.year) }}">{{ project.year }}</a></li>
   <li class="active">{{ project.name }}</li>
-{% endblock %}
+{% end %}
 
 {% block content %}
-  {% if request.user.is_authenticated %}
+  {#{% if request.user.is_authenticated %}
     <div class="editable">
       <div class="description-editable">
         <i class="glyphicon glyphicon-pencil form-edit"></i>
-  {% endif %}
+  {% end %}#}
   
-  {% if request.user.is_authenticated %}<p class="visibility">{% if project.private %}Private{% else %}Public{% endif %}</p>{% endif %}
+  {% if AUTHENTIFICATED %}<p class="visibility">{% if project.private %}Private{% else %}Public{% end %}</p>{% end %}
   <p class="short-description">{{ project.short_description }}</p>
-  <p class="category">{{ project.category.name }}</p>
+  <p class="category">{{ project.category }}</p>
   <ul class="technology">
-    {% for techno in project.technologies.all %}
-      <li>{{ techno.name }}</li>
-    {% endfor %}
+    {% for techno in project.technologies %}
+      <li>{{ techno }}</li>
+    {% end %}
   </ul>
 
-  {% if request.user.is_authenticated %}
+  {#{% if request.user.is_authenticated %}
       </div>
       <form method="post" class="form-horizontal" action="{% url projects.views.update_project project.pk %}">
       {% csrf_token %}
@@ -46,10 +44,10 @@
         </div></div>
       </form>
     </div>
-  {% endif %}
+  {% end %}#}
 
-  {% for description in project.description_set.all %}
-    {% if request.user.is_authenticated %}
+  {#{% for description in project.descriptions %}
+    {#{% if request.user.is_authenticated %}
       <div class="editable">
         <div class="description-editable">
           <i class="glyphicon glyphicon-pencil form-edit"></i>
@@ -61,23 +59,23 @@
           {{ description|get_form|as_bootstrap }}
           <div class="control-group"><div class="controls">
               <button class="btn btn-primary" onclick="submit">Submit</button>
-              <a data-confirm="Do you really want to move it one step up?" href="{% url projects.views.move_up_description description.pk %}" class="btn btn-warning" {% if forloop.first %}disabled="disabled"{% endif %}><i class="glyphicon glyphicon-chevron-up"></i> Up</a>
-              <a data-confirm="Do you really want to move it one step down?" href="{% url projects.views.move_down_description description.pk %}" class="btn btn-warning" {% if forloop.last %}disabled="disabled"{% endif %}><i class="glyphicon glyphicon-chevron-down"></i> Down</a>
+              <a data-confirm="Do you really want to move it one step up?" href="{% url projects.views.move_up_description description.pk %}" class="btn btn-warning" {% if forloop.first %}disabled="disabled"{% end %}><i class="glyphicon glyphicon-chevron-up"></i> Up</a>
+              <a data-confirm="Do you really want to move it one step down?" href="{% url projects.views.move_down_description description.pk %}" class="btn btn-warning" {% if forloop.last %}disabled="disabled"{% end %}><i class="glyphicon glyphicon-chevron-down"></i> Down</a>
               <a data-confirm="Do you really want to delete this Description?" href="{% url projects.views.delete_description description.pk %}" class="btn btn-danger">Delete</a>
           </div></div>
         </form>
       </div>
-    {% else %}
-      {{ description|get_safe_html }}
-    {% endif %}
-  {% endfor %}
+    {% else %}#}
+      {#{% module SafeHtmlDescription(description=description) %}
+    {#{% end %}#}{#
+  {% end %}
 
-  {% if request.user.is_authenticated %}
+  {#{% if request.user.is_authenticated %}
   <div class="editable">
     <div class="add-description">
       {% for name, form_details in empty_forms.items %}
         <div id="{{ name }}"><h3>{{ form_details.name }}</h3><p></p></div>
-      {% endfor %}
+      {% end %}
     </div>
     {% for name, form_details in empty_forms.items %}
       <form method="post" enctype="multipart/form-data" class="form-horizontal form-for" action="{% url projects.views.add_description_to project.pk name %}" id="form-for-{{ name }}">
@@ -88,23 +86,23 @@
             <button class="btn btn-primary" onclick="submit">Submit</button>
         </div></div>
       </form>
-    {% endfor %}
+    {% end %}
   </div>
-  {% endif %}
+  {% end %}#}
 
-  {% if request.user.is_authenticated or project.download_set.all|length > 0 %}
+  {#{% if AUTHENTIFICATED or len(project.downloads) > 0 %}
     <ul class="downloads" data-anchor="Download">
-    {% for down in project.download_set.all %}
+    {% for down in project.downloads %}
       <li>
         <a href="/media/{{ down.down }}" target="blank_">{{ down.down }}</a>
-        {% if request.user.is_authenticated %}
+        {#{% if request.user.is_authenticated %}
           <a data-confirm="Do you really want to delete this Download?" href="{% url projects.views.delete_download down.pk %}">
             <i class="glyphicon glyphicon-trash"></i>
           </a>
-        {% endif %}
+        {% end %}#}{#
       </li>
-    {% endfor %}
-    {% if request.user.is_authenticated %}
+    {% end %}
+    {#{% if request.user.is_authenticated %}
       <li class="editable">
         <span class="description-editable"><a href="javascript:void(0);" class="form-edit"><i class="glyphicon glyphicon-plus"></i> Add download</a></span>
         <form method="post" enctype="multipart/form-data" class="form-horizontal" action="{% url projects.views.add_download_to project.pk %}">
@@ -116,31 +114,31 @@
           </div></div>
         </form>
       </li>
-    {% endif %}
-    </ul>
-  {% endif %}
+    {% end %}#}
+    {#</ul>
+  {% end %}
   
-  {% if request.user.is_authenticated %}
+  {#{% if request.user.is_authenticated %}
     <ul class="downloads" style="margin-top: 20px;">
       {% for code in project.code_set.all %}
         <li>
           {% with code|cast_code as sc %}
-            {% if sc.archive %}{# SourceCode #}
+            {% if sc.archive %}#}{# SourceCode #}{#
               <a href="/media/{{ sc.archive }}" target="blank_">{{ sc.archive }}</a>
-            {% elif sc.url %}{# Repository #}
+            {% elif sc.url %}#}{# Repository #}{#
               <a href="{{ sc.url }}" target="blank_">{{ sc.url }} [{{ sc.software }}]</a>
-            {% endif %}
+            {% end %}
           {% endwith %}
           - uploaded {{ code.upload_time }}
           <ul id="sourcecode-lines-{{ code.pk }}">
             {% if code.lines_ready %}
-              {% for line in code.sourcetotechnolines_set.all %}<li>{{ line }}</li>{% endfor %}
+              {% for line in code.sourcetotechnolines_set.all %}<li>{{ line }}</li>{% end %}
             {% else %}
               <script type="text/javascript"> ajax_sourcecode_lines("sourcecode-lines-{{ code.pk }}", "{% url projects.views.get_code_lines code.pk %}"); </script>
-            {% endif %}
+            {% end %}
           </ul>
         </li>
-      {% endfor %}
+      {% end %}
       <li class="editable">
         <span class="description-editable"><a href="javascript:void(0);" class="form-edit"><i class="glyphicon glyphicon-plus"></i> Add sourcecode</a></span>
         <form method="post" enctype="multipart/form-data" class="form-horizontal" action="{% url projects.views.add_sourcecode_to project.pk %}">
@@ -164,9 +162,9 @@
         </form>
       </li>
     </ul>
-  {% endif %}
+  {% end %}#}
 
-  {% if request.user.is_authenticated %}
+  {% if AUTHENTIFICATED %}
     <script type="text/javascript">
     <!--
       $(".editable form").hide();
@@ -204,12 +202,12 @@
       });
     -->
     </script>
-  {% endif %}
-{% endblock %}
+  {% end %}
+{% end %}
 
 {% block js-preload %}
-  {% if request.user.is_authenticated %}
+  {% if AUTHENTIFICATED %}
     img_url.push("/static/img/more-on.png");
-  {% endif %}
-{% endblock %}
+  {% end %}
+{% end %}
 

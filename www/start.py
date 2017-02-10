@@ -43,7 +43,7 @@ application = Application([
     #url('^moveup/description/(?P<description_id>\d+)/$', 'move_up_description'),
     #url('^movedown/description/(?P<description_id>\d+)/$', 'move_down_description'),
     #url('^project/(?P<project_url>[^/]+)/$', 'show_project_depreciated'),
-    url(r"/(?P<year>\d{4})/(?P<project_url>[^/]+)\.html", ProjectHandler, name="show_project"),
+    url(r"/(?P<year>\d{4})/(?P<project_url>[^/]+).html", ProjectHandler, name="show_project"),
     url(r"/(?P<year>\d{4})/", PerYearHandler, name="show_projects_year"),
     url(r"/error/(?P<error_code>\d{3}).html", ErrorHandler, name="error_code"),
     #url('^get/code/lines/(?P<code_id>\d+)/$', 'get_code_lines'),

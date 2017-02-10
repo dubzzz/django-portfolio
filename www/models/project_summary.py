@@ -7,7 +7,7 @@ __CURRENT_PATH = path.dirname(__file__)
 sys.path.append(path.join(__CURRENT_PATH, "..", "scripts"))
 from generate_db import DEFAULT_DB
 
-class ProjectSummary:
+class ProjectSummary(object):
     def __init__(self, year, name_url, name, short_description, private):
         self.year = year
         self.name_url = name_url
