@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block page_title %}{{ year }} - PortFolio{% end %}
+{% block title %}{{ year }} - PortFolio{% end %}
+{% block page_description %}Some projects that have been started and developped in {{ year }} by Nicolas DUBIEN{% end %}
+
+{% block breadcrumb %}
+  <li><a href="{{ reverse_url('home') }}">Home</a></li>
+  <li class="active">{{ year }}</li>
+{% end %}
+
+{% block content %}
+  <ul class="pager">
+    {% if prev_year %}<li class="previous"><a href="{{ reverse_url('show_projects_year', prev_year) }}">&larr; {{ prev_year }}</a></li>{% end %}
+    {% if next_year %}<li class="next"><a href="{{ reverse_url('show_projects_year', next_year) }}">{{ next_year }} &rarr;</a></li>{% end %}
+  </ul>  
+  
+  <div class="details">
+    <h2 id="year{{ year }}" data-anchor="{{ year }}">{{ year }}</h2>
+    {% for project in projects %}
+      <div class="postit-wrapper">
+        <a href="{{ reverse_url('show_project', project.year, project.name_url) }}">
+          <div class="postit {% if project.private %}private{% end %}">
+            <h3>{{ project.name }}</h3>
+            <p>{{ project.short_description }}</p>
+          </div>
+        </a>
+      </div>
+    {% end %}
+  </div>
+
+  {% include "add_project_form.html" %}
+{% end %}
+
+{% block js-preload %}
+  {% if AUTHENTIFICATED %}
+    img_url.push("/static/img/more-on.png");
+  {% end %}
+{% end %}
+
