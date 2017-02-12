@@ -1,7 +1,9 @@
+import re
 import sqlite3
 import sys
 from datetime import datetime
 from os import path
+from tornado.escape import xhtml_escape, url_escape
 
 __CURRENT_PATH = path.dirname(__file__)
 
@@ -15,7 +17,44 @@ class Project(ProjectSummary):
         super(Project, self).__init__(year, name_url, name, short_description, private)
         self.category = category
         self.technologies = list()
+        self.descriptions = list()
         self.modified = modified
+
+class Description(object):
+    def __init__(self, anchor):
+        self.anchor = anchor
+    
+    def wrap(self, escaped_text):
+        if self.anchor and len(self.anchor) > 0:
+            escaped_text = re.sub(r'^<(?P<details>[^>]+)>', '<\g<details> data-anchor="%s">' % self.anchor, escaped_text)
+        return escaped_text
+
+class ImageContent(Description):
+    def __init__(self, anchor, image, legend):
+        super(ImageContent, self).__init__(anchor)
+        self.image = image
+        self.legend = legend
+    
+    def __str__(self):
+        escaped_url = '/'.join([url_escape(elt) for elt in self.image.split('/')])
+        return self.wrap("""<p class="image"><img src="/media/%s" alt="%s" /><br/><span class="legend">%s</span></p>""" % (escaped_url, xhtml_escape(self.legend), xhtml_escape(self.legend)))
+
+class HtmlCode(Description):
+    def __init__(self, anchor, description):
+        super(HtmlCode, self).__init__(anchor)
+        self.description = description
+    
+    def __str__(self):
+        return self.wrap(self.description)
+
+class RawText(Description):
+    def __init__(self, anchor, description, htmlcode):
+        super(RawText, self).__init__(anchor)
+        self.description = description
+        self.htmlcode = htmlcode
+    
+    def __str__(self):
+        return self.wrap(self.htmlcode)
 
 def project_from_query(data):
     year = data[0]
@@ -26,6 +65,17 @@ def project_from_query(data):
     modified = data[5]
     category = data[6]
     return Project(year, name_url, name, short_description, private, modified, category)
+
+def description_from_query(data):
+    model = data[0]
+    position = int(data[1])
+    anchor = data[2]
+    if model == "imagedescription":
+        return (position, ImageContent(anchor, data[6], data[7]))
+    elif model == "htmlcodedescription":
+        return (position, HtmlCode(anchor, data[5]))
+    elif model == "rawtextdescription":
+        return (position, RawText(anchor, data[3], data[4]))
 
 def load_project(year, project_url, private_only):
     with sqlite3.connect(DEFAULT_DB) as conn:
@@ -59,6 +109,22 @@ def load_project(year, project_url, private_only):
                        ON j.technology_id = tech.id
                    WHERE j.project_id = ?''', (pid,))
         p.technologies = [data[0] for data in c.fetchall()]
+        
+        # Append descriptions
+        
+        c.execute('''SELECT dj.model, desc.position, desc.data_anchor, raw.description, raw.description_html, html.description, img.image, img.legend
+                    FROM projects_description AS desc
+                    INNER JOIN django_content_type AS dj
+                        ON dj.id = desc.real_type_id
+                    LEFT JOIN projects_rawtextdescription AS raw
+                        ON raw.description_ptr_id = desc.id
+                    LEFT JOIN projects_htmlcodedescription AS html
+                        ON html.description_ptr_id = desc.id
+                    LEFT JOIN projects_imagedescription AS img
+                        ON img.description_ptr_id = desc.id
+                    WHERE desc.project_id = ?
+                    ORDER BY desc.position''', (pid,))
+        p.descriptions = [description_from_query(data) for data in c.fetchall()]
         
         return p
     return None

@@ -46,7 +46,7 @@
     </div>
   {% end %}#}
 
-  {#{% for description in project.descriptions %}
+  {% for pos, description in project.descriptions %}
     {#{% if request.user.is_authenticated %}
       <div class="editable">
         <div class="description-editable">
@@ -66,8 +66,8 @@
         </form>
       </div>
     {% else %}#}
-      {#{% module SafeHtmlDescription(description=description) %}
-    {#{% end %}#}{#
+      {% raw description %}
+    {#{% end %}#}
   {% end %}
 
   {#{% if request.user.is_authenticated %}
