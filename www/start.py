@@ -10,6 +10,7 @@ from config import COOKIE_SECRET
 
 __CURRENT_PATH = path.dirname(__file__)
 __CURRENT_ABSPATH = path.dirname(path.realpath(__file__))
+__MEDIA_ABSPATH = path.join(__CURRENT_ABSPATH, "media")
 __STATIC_ABSPATH = path.join(__CURRENT_ABSPATH, "static")
 __TEMPLATES_ABSPATH = path.join(__CURRENT_ABSPATH, "templates")
 
@@ -50,6 +51,7 @@ application = Application([
     #url('^get/code/lines/(?P<code_id>\d+)/$', 'get_code_lines'),
     url(r"/login", LoginHandler, name="login"),
     url(r"/logout", LogoutHandler, name="logout"),
+    url(r'/media/(.*)', StaticFileHandler, {'path': __MEDIA_ABSPATH}),
     url(r'/static/(.*)', StaticFileHandler, {'path': __STATIC_ABSPATH}),
 ], **settings)
 

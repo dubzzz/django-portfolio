@@ -47,6 +47,7 @@ admin
 # Tornado configuration files
 *.db
 /www/config.py
+/www/media
 /www/static/private
 /www/templates/base_head.html
 /www/templates/home_content.html
