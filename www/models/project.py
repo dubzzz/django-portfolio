@@ -30,7 +30,10 @@ def project_from_query(data):
 def load_project(year, project_url, private_only):
     with sqlite3.connect(DEFAULT_DB) as conn:
         c = conn.cursor()
-        query = '''SELECT proj.year, proj.name_url, proj.name, proj.short_description, proj.private, proj.modified, cat.name
+        
+        # Load basic project details
+        
+        query = '''SELECT proj.year, proj.name_url, proj.name, proj.short_description, proj.private, proj.modified, cat.name, proj.id
                    FROM projects_project AS proj
                    INNER JOIN projects_category AS cat
                        ON proj.category_id = cat.id
@@ -45,7 +48,18 @@ def load_project(year, project_url, private_only):
         if data is None:
             return None
         
+        pid = int(data[7])
         p = project_from_query(data)
+        
+        # Append technologies
+        
+        c.execute('''SELECT tech.name
+                   FROM projects_technology AS tech
+                   INNER JOIN projects_project_technologies AS j
+                       ON j.technology_id = tech.id
+                   WHERE j.project_id = ?''', (pid,))
+        p.technologies = [data[0] for data in c.fetchall()]
+        
         return p
     return None
 
