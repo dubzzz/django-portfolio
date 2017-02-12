@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from os import path
+import locale
 import sys
 
 from tornado.ioloop import IOLoop
@@ -70,7 +71,9 @@ if __name__ == "__main__":
         print('''ERROR: {}'''.format(e))
         print('''Syntax: ./start.py <port=8080>''')
         exit(3)
-    
+ 
+    locale.setlocale(locale.LC_ALL, 'en_US.utf8')
+
     # Start the server
     application.listen(port)
     IOLoop.instance().start()
