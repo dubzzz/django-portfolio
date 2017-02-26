@@ -3,7 +3,7 @@ import sqlite3
 import sys
 from datetime import datetime
 from os import path
-from tornado.escape import xhtml_escape, url_escape
+from tornado.escape import utf8, _unicode, xhtml_escape, url_escape
 
 __CURRENT_PATH = path.dirname(__file__)
 
@@ -27,7 +27,7 @@ class Description(object):
     def wrap(self, escaped_text):
         if self.anchor and len(self.anchor) > 0:
             escaped_text = re.sub(r'^<(?P<details>[^>]+)>', '<\g<details> data-anchor="%s">' % self.anchor, escaped_text)
-        return escaped_text
+        return utf8(escaped_text) #.encode('ascii')
 
 class ImageContent(Description):
     def __init__(self, anchor, image, legend):
