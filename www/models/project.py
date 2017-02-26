@@ -18,6 +18,7 @@ class Project(ProjectSummary):
         self.category = category
         self.technologies = list()
         self.descriptions = list()
+        self.downloads = list()
         self.modified = modified
 
 class Description(object):
@@ -56,6 +57,13 @@ class RawText(Description):
     def __str__(self):
         return self.wrap(self.htmlcode)
 
+class Download(object):
+    def __init__(self, url):
+      self.url = url
+    
+    def __str__(self):
+      return utf8(self.url)
+
 def project_from_query(data):
     year = data[0]
     name_url = data[1]
@@ -76,6 +84,9 @@ def description_from_query(data):
         return (position, HtmlCode(anchor, data[5]))
     elif model == "rawtextdescription":
         return (position, RawText(anchor, data[3], data[4]))
+
+def download_from_query(data):
+    return (int(data[0]), data[1])
 
 def load_project(year, project_url, private_only):
     with sqlite3.connect(DEFAULT_DB) as conn:
@@ -125,6 +136,13 @@ def load_project(year, project_url, private_only):
                     WHERE desc.project_id = ?
                     ORDER BY desc.position''', (pid,))
         p.descriptions = [description_from_query(data) for data in c.fetchall()]
+        
+        # Append downloads
+                
+        c.execute('''SELECT down.id, down.down
+                   FROM projects_download AS down
+                   WHERE down.project_id = ?''', (pid,))
+        p.downloads = [download_from_query(data) for data in c.fetchall()]
         
         return p
     return None
