@@ -16,7 +16,7 @@ __TEMPLATES_ABSPATH = path.join(__CURRENT_ABSPATH, "templates")
 
 sys.path.append(path.join(__CURRENT_PATH, "views"))
 from auth import LoginHandler, LogoutHandler
-from projects import HomeHandler, ProjectHandler, PerYearHandler, ErrorHandler
+from projects import HomeHandler, AddProjectHandler, ProjectHandler, PerYearHandler, ErrorHandler
 
 sys.path.append(path.join(__CURRENT_PATH, "views", "modules"))
 import uimodules
@@ -38,7 +38,7 @@ application = Application([
     #url('^edit/project/(?P<project_id>\d+)/add/(?P<description_type>\w+)/$', 'add_description_to'),
     #url('^edit/description/(?P<description_id>\d+)/$', 'update_description'),
     #url('^edit/project/(?P<project_id>\d+)/$', 'update_project'),
-    #url('^add/project/$', 'add_project'),
+    url(r"/add/project", AddProjectHandler, name="add_project"),
     #url('^delete/description/(?P<description_id>\d+)/$', 'delete_description'),
     #url('^delete/download/(?P<download_id>\d+)/$', 'delete_download'),
     #url('^delete/project/(?P<project_id>\d+)/$', 'delete_project'),

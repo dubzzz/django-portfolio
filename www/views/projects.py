@@ -7,13 +7,23 @@ __CURRENT_PATH = path.dirname(__file__)
 
 from auth import BaseHandler
 
+sys.path.append(path.join(__CURRENT_PATH, "forms"))
+from forms import DummyForm, ProjectHeaderForm
+
 sys.path.append(path.join(__CURRENT_PATH, "..", "models"))
 from project import load_project
 from project_summary import load_all_summaries, load_summaries_of_year, surround_years
 
 class HomeHandler(BaseHandler):
     def get(self):
-        self.render("home.html", STATS=None, by_year_list=load_all_summaries(not self.is_authentificated()))
+        is_logged = self.is_authentificated()
+        form = ProjectHeaderForm() if is_logged else DummyForm()
+        self.render("home.html", STATS=None, by_year_list=load_all_summaries(not is_logged), empty_project_form=form)
+
+class AddProjectHandler(BaseHandler):
+    def get(self):
+        self.redirect(self.reverse_url('error_code', '404'))
+        return
 
 class PerYearHandler(BaseHandler):
     def get(self, year):
