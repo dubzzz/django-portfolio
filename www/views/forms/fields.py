@@ -1,8 +1,7 @@
 from tornado.escape import utf8, _unicode, xhtml_escape, url_escape
 
-class Field(object):
-    def __init__(self, field_type, field_name, label, help_text, required):
-        self.field_type = field_type
+class AbstractField(object):
+    def __init__(self, field_name, label, help_text, required):
         self.field_name = field_name
         self.label = label
         self.help_text = help_text
@@ -14,9 +13,14 @@ class Field(object):
             return args[self.field_name][0].decode('utf_8')
         except (KeyError, IndexError) as e:
             if self.required:
-                self.errors.append("Please fill input field: '%s'" % (self.field_name,))
+                self.errors.append("Please fill field: '%s'" % (self.field_name,))
                 return None
             return ""
+    
+class InputField(AbstractField):
+    def __init__(self, field_type, field_name, label, help_text, required):
+        super(InputField, self).__init__(field_name, label, help_text, required)
+        self.field_type = field_type
     
     def render(self, attrs):
         attrs["type"] = self.field_type
@@ -28,7 +32,7 @@ class Field(object):
     def __str__(self):
         return self.render({})
 
-class BooleanField(Field):
+class BooleanField(InputField):
     def __init__(self, field_name, label, help_text="", required=False):
         super(BooleanField, self).__init__("checkbox", field_name, label, help_text, required)
         self._is_checked = False
@@ -43,7 +47,7 @@ class BooleanField(Field):
             attrs["checked"] = None
         return self.render(attrs)
 
-class TextField(Field):
+class TextField(InputField):
     def __init__(self, field_name, label, help_text="", required=False):
         super(TextField, self).__init__("text", field_name, label, help_text, required)
         self._max_length = None
@@ -67,7 +71,41 @@ class TextField(Field):
             attrs["maxlength"] = str(self._max_length)
         return self.render(attrs)
 
-class PasswordField(Field):
+class PasswordField(InputField):
     def __init__(self, field_name, label, help_text="", required=False):
         super(PasswordField, self).__init__("password", field_name, label, help_text, required)
+
+class AbstractSelectField(AbstractField):
+    def __init__(self, field_name, label, help_text, required):
+        super(AbstractSelectField, self).__init__(field_name, label, help_text, required)
+        self.choices = []
+    
+    def withChoices(self, choices):
+        self.choices = choices #array of pair (tuple) { key: string, value: string }
+        return self
+        
+    def render(self, attrs):
+        out = list()
+        
+        attrs["name"] = self.field_name
+        if self.required:
+            attrs["required"] = None
+        out.append('<select %s>' % (" ".join(['%s="%s"' % (key, xhtml_escape(value)) if value is not None else key for key,value in attrs.items()]),))
+        
+        for key, value in self.choices:
+            out.append('<option value="%s">%s</option>' % (xhtml_escape(key), xhtml_escape(value),))
+        out.append('</select>')
+        return "".join(out)
+
+class SelectField(AbstractSelectField):
+    def __init__(self, field_name, label, help_text, required):
+        super(SelectField, self).__init__(field_name, label, help_text, required)
+    def __str__(self):
+        return self.render({})
+
+class MultiSelectField(AbstractSelectField):
+    def __init__(self, field_name, label, help_text, required):
+        super(MultiSelectField, self).__init__(field_name, label, help_text, required)
+    def __str__(self):
+        return self.render({'multiple': None})
 

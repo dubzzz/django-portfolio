@@ -12,12 +12,12 @@ from forms import DummyForm, ProjectHeaderForm
 
 sys.path.append(path.join(__CURRENT_PATH, "..", "models"))
 from project import load_project
-from project_summary import load_all_summaries, load_summaries_of_year, surround_years
+from project_summary import load_all_summaries, load_summaries_of_year, surround_years, load_categories, load_technologies
 
 class HomeHandler(BaseHandler):
     def get(self):
         is_logged = self.is_authentificated()
-        form = ProjectHeaderForm() if is_logged else DummyForm()
+        form = ProjectHeaderForm(load_categories(), load_technologies()) if is_logged else DummyForm()
         self.render("home.html", STATS=None, by_year_list=load_all_summaries(not is_logged), empty_project_form=form)
 
 class AddProjectHandler(BaseHandler):

@@ -1,4 +1,4 @@
-from fields import BooleanField, TextField, PasswordField
+from fields import BooleanField, TextField, PasswordField, SelectField, MultiSelectField
 
 class AbstractForm(object):
     def __init__(self, fields):
@@ -28,13 +28,15 @@ class DummyForm(AbstractForm):
         super(DummyForm, self).__init__([])
 
 class ProjectHeaderForm(AbstractForm):
-    def __init__(self):
+    def __init__(self, available_categories, available_technologies):
         fields = [
                 TextField("name", "Name", "Project name", True).withMaxLength(50)
                 , TextField("name_url", "Name url", "Project name (URL)", True).withMaxLength(20)
                 , TextField("short_description", "Short description", "Short description (max. 155)", True).withMaxLength(155)
                 , TextField("year", "Year", "Release date", True)
                 , BooleanField("private", "Private", "Private => visible only if logged in", True).withIsChecked(True)
+                , SelectField("category", "Category", "Category", True).withChoices(available_categories)
+                , MultiSelectField("technologies", "Technologies", "Technologies", True).withChoices(available_technologies)
         ]
         super(ProjectHeaderForm, self).__init__(fields)
 

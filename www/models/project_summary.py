@@ -69,3 +69,17 @@ def surround_years(year, private_only):
                 next_year = data[1]
     return (prev_year, next_year)
 
+def load_categories():
+    with sqlite3.connect(DEFAULT_DB) as conn:
+        c = conn.cursor()
+        c.execute('''SELECT id, name FROM projects_category ORDER BY name''')
+        return [(str(data[0]), data[1]) for data in c.fetchall()]
+    return []
+
+def load_technologies():
+    with sqlite3.connect(DEFAULT_DB) as conn:
+        c = conn.cursor()
+        c.execute('''SELECT id, name FROM projects_technology ORDER BY name''')
+        return [(str(data[0]), data[1]) for data in c.fetchall()]
+    return []
+
