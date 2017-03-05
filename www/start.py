@@ -16,7 +16,7 @@ __TEMPLATES_ABSPATH = path.join(__CURRENT_ABSPATH, "templates")
 
 sys.path.append(path.join(__CURRENT_PATH, "views"))
 from auth import LoginHandler, LogoutHandler
-from projects import HomeHandler, AddProjectHandler, DeleteProjectHandler, ProjectHandler, PerYearHandler, ErrorHandler
+from projects import HomeHandler, AddProjectHandler, DeleteProjectHandler, ProjectHandler, PerYearHandler, ErrorHandler, PageNotFoundHandler
 
 sys.path.append(path.join(__CURRENT_PATH, "views", "modules"))
 import uimodules
@@ -53,6 +53,7 @@ application = Application([
     url(r"/logout", LogoutHandler, name="logout"),
     url(r'/media/(.*)', StaticFileHandler, {'path': __MEDIA_ABSPATH}),
     url(r'/static/(.*)', StaticFileHandler, {'path': __STATIC_ABSPATH}),
+    url(r"/.*", PageNotFoundHandler),
 ], **settings)
 
 if __name__ == "__main__":

@@ -65,3 +65,9 @@ class ErrorHandler(BaseHandler):
             self.set_status(404)
             self.render("404.html")
 
+class PageNotFoundHandler(BaseHandler):
+    def get(self):
+        self.redirect(self.reverse_url('error_code', '404'))
+    def post(self):
+        self.redirect(self.reverse_url('error_code', '404'))
+
