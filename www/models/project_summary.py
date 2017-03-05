@@ -1,5 +1,6 @@
 import sqlite3
 import sys
+from datetime import datetime
 from os import path
 
 __CURRENT_PATH = path.dirname(__file__)
@@ -82,4 +83,14 @@ def load_technologies():
         c.execute('''SELECT id, name FROM projects_technology ORDER BY name''')
         return [(str(data[0]), data[1]) for data in c.fetchall()]
     return []
+
+def create_summary(data):
+    creation_time = datetime.now()
+    with sqlite3.connect(DEFAULT_DB) as conn:
+        c = conn.cursor()
+        c.execute('''INSERT INTO projects_project(name, name_url, short_description, year, private, category_id, created, modified) VALUES(?,?,?,?,?,?,?,?)''',
+            (data["name"], data["name_url"], data["short_description"], int(data["year"]), data["private"], int(data["category"]), creation_time, creation_time,))
+        rid = c.lastrowid
+        c.executemany('''INSERT INTO projects_project_technologies(project_id, technology_id) VALUES(?,?)''', [(rid, int(techid)) for techid in data["technologies"]])
+        conn.commit()
 

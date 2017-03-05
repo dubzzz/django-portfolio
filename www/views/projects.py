@@ -13,7 +13,7 @@ from forms import DummyForm, ProjectHeaderForm
 
 sys.path.append(path.join(__CURRENT_PATH, "..", "models"))
 from project import load_project
-from project_summary import load_all_summaries, load_summaries_of_year, surround_years, load_categories, load_technologies
+from project_summary import load_all_summaries, load_summaries_of_year, surround_years, load_categories, load_technologies, create_summary
 
 class HomeHandler(BaseHandler):
     def get(self):
@@ -26,10 +26,11 @@ class AddProjectHandler(BaseHandler):
     def post(self):
         form = ProjectHeaderForm(load_categories(), load_technologies())
         data = form.read(self)
-        print(self.request.arguments)
-        print(data)
-        self.redirect(self.reverse_url('error_code', '404'))
-        return
+        if form.error:
+            self.redirect(self.reverse_url('home')) #should maybe render home page with the form
+            return
+        create_summary(data)
+        self.redirect(self.reverse_url('show_project', data['year'], data['name_url']))
 
 class PerYearHandler(BaseHandler):
     def get(self, year):
