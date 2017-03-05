@@ -34,9 +34,11 @@ class AddProjectHandler(BaseHandler):
 
 class PerYearHandler(BaseHandler):
     def get(self, year):
-        projects = load_summaries_of_year(year, not self.is_authentificated())
-        prev_year, next_year = surround_years(year, not self.is_authentificated())
-        self.render("projects_year.html", projects=projects, year=year, prev_year=prev_year, next_year=next_year)
+        is_logged = self.is_authentificated()
+        form = ProjectHeaderForm(load_categories(), load_technologies()) if is_logged else DummyForm()
+        projects = load_summaries_of_year(year, not is_logged)
+        prev_year, next_year = surround_years(year, not is_logged)
+        self.render("projects_year.html", projects=projects, year=year, prev_year=prev_year, next_year=next_year, empty_project_form=form)
 
 class ProjectHandler(BaseHandler):
     def get(self, year, project_url):
