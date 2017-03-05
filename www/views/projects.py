@@ -5,6 +5,7 @@ from os import path
 
 __CURRENT_PATH = path.dirname(__file__)
 
+from tornado.web import authenticated
 from auth import BaseHandler
 
 sys.path.append(path.join(__CURRENT_PATH, "forms"))
@@ -21,7 +22,12 @@ class HomeHandler(BaseHandler):
         self.render("home.html", STATS=None, by_year_list=load_all_summaries(not is_logged), empty_project_form=form)
 
 class AddProjectHandler(BaseHandler):
-    def get(self):
+    @authenticated
+    def post(self):
+        form = ProjectHeaderForm(load_categories(), load_technologies())
+        data = form.read(self)
+        print(self.request.arguments)
+        print(data)
         self.redirect(self.reverse_url('error_code', '404'))
         return
 

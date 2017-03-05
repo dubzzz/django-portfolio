@@ -8,19 +8,37 @@ class AbstractField(object):
         self.required = required
         self.errors = list()
     
-    def read(self, args):    
+    def base_read(self, args):
         try:
-            return args[self.field_name][0].decode('utf_8')
-        except (KeyError, IndexError) as e:
+            field_data = args[self.field_name]
+            if self.required and len(field_data) < 1:
+                self.errors.append("Please fill field: '%s'" % (self.field_name,))
+                return None
+            return [v.decode('utf_8') for v in field_data]
+        except KeyError as e:
             if self.required:
                 self.errors.append("Please fill field: '%s'" % (self.field_name,))
                 return None
+            return []
+    
+    def single_read(self, args):
+        out = self.base_read(args)
+        if out is None:
+            return None
+        if len(out) > 1:
+            self.errors.append("Too many values for field: '%s'" % (self.field_name,))
+            return None
+        elif len(out) == 0:
             return ""
+        return out[0]
     
 class InputField(AbstractField):
     def __init__(self, field_type, field_name, label, help_text, required):
         super(InputField, self).__init__(field_name, label, help_text, required)
         self.field_type = field_type
+    
+    def read(self, args):
+        return self.single_read(args)
     
     def render(self, attrs):
         attrs["type"] = self.field_type
@@ -40,6 +58,11 @@ class BooleanField(InputField):
     def withIsChecked(self, is_checked):
         self._is_checked = is_checked
         return self
+    
+    def read(self, args):
+        out = self.single_read(args)
+        if out is None: return None
+        return out == "on"
     
     def __str__(self):
         attrs = {}
@@ -100,12 +123,16 @@ class AbstractSelectField(AbstractField):
 class SelectField(AbstractSelectField):
     def __init__(self, field_name, label, help_text, required):
         super(SelectField, self).__init__(field_name, label, help_text, required)
+    def read(self, args):
+        return self.single_read(args)
     def __str__(self):
         return self.render({})
 
 class MultiSelectField(AbstractSelectField):
     def __init__(self, field_name, label, help_text, required):
         super(MultiSelectField, self).__init__(field_name, label, help_text, required)
+    def read(self, args):
+        return self.base_read(args)
     def __str__(self):
         return self.render({'multiple': None})
 
