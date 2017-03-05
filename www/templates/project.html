@@ -17,11 +17,11 @@
 {% end %}
 
 {% block content %}
-  {#{% if request.user.is_authenticated %}
+  {% if AUTHENTIFICATED %}
     <div class="editable">
       <div class="description-editable">
         <i class="glyphicon glyphicon-pencil form-edit"></i>
-  {% end %}#}
+  {% end %}
   
   {% if AUTHENTIFICATED %}<p class="visibility">{% if project.private %}Private{% else %}Public{% end %}</p>{% end %}
   <p class="short-description">{{ project.short_description }}</p>
@@ -32,19 +32,19 @@
     {% end %}
   </ul>
 
-  {#{% if request.user.is_authenticated %}
+  {% if AUTHENTIFICATED %}
       </div>
-      <form method="post" class="form-horizontal" action="{% url projects.views.update_project project.pk %}">
-      {% csrf_token %}
+      <form method="post" class="form-horizontal" action="{#{% url projects.views.update_project project.pk %}#}">
         <i class="glyphicon glyphicon-remove form-close"></i>
-        {{ project_form|as_bootstrap }}
+		    {% module xsrf_form_html() %}
+        {#{% module BootstrapForm(form=empty_project_form) %}#}
         <div class="control-group"><div class="controls">
-            <button class="btn btn-primary" onclick="submit">Submit</button>
-            <a data-confirm="Do you really want to delete this Project?" href="{% url projects.views.delete_project project.pk %}" class="btn btn-danger">Delete Project</a>
+            {#<button class="btn btn-primary" onclick="submit">Submit</button>#}
+            <a data-confirm="Do you really want to delete this Project?" href="{{ reverse_url('delete_project', project.year, project.name_url) }}" class="btn btn-danger">Delete Project</a>
         </div></div>
       </form>
     </div>
-  {% end %}#}
+  {% end %}
 
   {% for pos, description in project.descriptions %}
     {#{% if request.user.is_authenticated %}

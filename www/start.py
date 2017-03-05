@@ -16,7 +16,7 @@ __TEMPLATES_ABSPATH = path.join(__CURRENT_ABSPATH, "templates")
 
 sys.path.append(path.join(__CURRENT_PATH, "views"))
 from auth import LoginHandler, LogoutHandler
-from projects import HomeHandler, AddProjectHandler, ProjectHandler, PerYearHandler, ErrorHandler
+from projects import HomeHandler, AddProjectHandler, DeleteProjectHandler, ProjectHandler, PerYearHandler, ErrorHandler
 
 sys.path.append(path.join(__CURRENT_PATH, "views", "modules"))
 import uimodules
@@ -38,14 +38,14 @@ application = Application([
     #url('^edit/project/(?P<project_id>\d+)/add/(?P<description_type>\w+)/$', 'add_description_to'),
     #url('^edit/description/(?P<description_id>\d+)/$', 'update_description'),
     #url('^edit/project/(?P<project_id>\d+)/$', 'update_project'),
-    url(r"/add/project", AddProjectHandler, name="add_project"),
+    url(r"/add/project/", AddProjectHandler, name="add_project"),
     #url('^delete/description/(?P<description_id>\d+)/$', 'delete_description'),
     #url('^delete/download/(?P<download_id>\d+)/$', 'delete_download'),
-    #url('^delete/project/(?P<project_id>\d+)/$', 'delete_project'),
+    url(r"/delete/project/(?P<year>\d{4})/(?P<project_url>.+)/", DeleteProjectHandler, name="delete_project"),
     #url('^moveup/description/(?P<description_id>\d+)/$', 'move_up_description'),
     #url('^movedown/description/(?P<description_id>\d+)/$', 'move_down_description'),
     #url('^project/(?P<project_url>[^/]+)/$', 'show_project_depreciated'),
-    url(r"/(?P<year>\d{4})/(?P<project_url>[^/]+).html", ProjectHandler, name="show_project"),
+    url(r"/(?P<year>\d{4})/(?P<project_url>.+).html", ProjectHandler, name="show_project"),
     url(r"/(?P<year>\d{4})/", PerYearHandler, name="show_projects_year"),
     url(r"/error/(?P<error_code>\d{3}).html", ErrorHandler, name="error_code"),
     #url('^get/code/lines/(?P<code_id>\d+)/$', 'get_code_lines'),

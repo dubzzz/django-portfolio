@@ -271,3 +271,33 @@ def load_project(year, project_url, private_only):
         return p
     return None
 
+def delete_project(year, project_url):
+    with sqlite3.connect(DEFAULT_DB) as conn:
+        c = conn.cursor()
+        c.execute('''SELECT id FROM projects_project WHERE year=? AND name_url=?''', (year, project_url,))
+        data = c.fetchone()
+        if data is None:
+            return False
+        pid = int(data[0])
+        
+        # technologies
+        c.execute('''DELETE FROM projects_project_technologies WHERE project_id=?''', (pid,))
+        
+        # downloads
+        c.execute('''DELETE FROM projects_download WHERE project_id=?''', (pid,))
+        
+        # descriptions
+        c.execute('''SELECT id FROM projects_description WHERE project_id=?''', (pid,))
+        dids = [int(data[0]) for data in c.fetchall()]
+        c.executemany('''DELETE FROM projects_rawtextdescription WHERE description_ptr_id=?''', dids)
+        c.executemany('''DELETE FROM projects_htmlcodedescription WHERE description_ptr_id=?''', dids)
+        c.executemany('''DELETE FROM projects_imagedescription WHERE description_ptr_id=?''', dids)
+        c.executemany('''DELETE FROM projects_description WHERE id=?''', dids)
+        
+        # project
+        c.execute('''DELETE FROM projects_project WHERE id=?''', (pid,))
+        
+        conn.commit()
+        return True
+    return False
+

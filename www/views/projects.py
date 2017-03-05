@@ -12,7 +12,7 @@ sys.path.append(path.join(__CURRENT_PATH, "forms"))
 from forms import DummyForm, ProjectHeaderForm
 
 sys.path.append(path.join(__CURRENT_PATH, "..", "models"))
-from project import load_project
+from project import load_project, delete_project
 from project_summary import load_all_summaries, load_summaries_of_year, surround_years, load_categories, load_technologies, create_summary
 
 class HomeHandler(BaseHandler):
@@ -31,6 +31,14 @@ class AddProjectHandler(BaseHandler):
             return
         create_summary(data)
         self.redirect(self.reverse_url('show_project', data['year'], data['name_url']))
+
+class DeleteProjectHandler(BaseHandler):
+    @authenticated
+    def get(self, year, project_url):
+        if not delete_project(year, project_url):
+            self.redirect(self.reverse_url('error_code', '404'))
+            return
+        self.redirect(self.reverse_url('home'))
 
 class PerYearHandler(BaseHandler):
     def get(self, year):
